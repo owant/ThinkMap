@@ -2,7 +2,6 @@ package com.owant.drawtreeview.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -11,6 +10,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.owant.drawtreeview.R;
 import com.owant.drawtreeview.model.NotFindNodeException;
 import com.owant.drawtreeview.model.Tree;
 import com.owant.drawtreeview.model.TreeNode;
@@ -54,9 +54,12 @@ public class TreeView extends RelativeLayout {
         nodeViews = new ArrayList<NodeView>();
 
         mDx = dp2px(mContext, 20);
-        mDy = dp2px(mContext, 20);
+        mDy = dp2px(mContext, 22);
+
+//        test();
 
         addNoteView();
+
     }
 
     private void addNoteView() {
@@ -69,9 +72,15 @@ public class TreeView extends RelativeLayout {
 
                 NodeView nodeView = new NodeView(mContext);
                 nodeView.setTreeNode(rootNode);
+                float textSize = (float) (18 - 5 * rootNode.getFloor());
+                if (textSize < 9) {
+                    textSize = 9;
+                }
+                nodeView.setTextSize(textSize);
 
                 nodeViews.add(nodeView);
                 this.addView(nodeView);
+                Log.i("node", nodeView.getText().toString());
 
                 LinkedList<TreeNode<String>> childNodes = rootNode.getChildNodes();
                 if (childNodes.size() > 0) {
@@ -83,26 +92,139 @@ public class TreeView extends RelativeLayout {
         }
     }
 
+//    TreeNode<String> root = new TreeNode<>("A");
+//    TreeNode<String> nodeB = new TreeNode<>("B");
+//    TreeNode<String> nodeC = new TreeNode<>("C");
+//    TreeNode<String> nodeD = new TreeNode<>("D");
+//    TreeNode<String> nodeE = new TreeNode<>("E");
+//    TreeNode<String> nodeF = new TreeNode<>("F");
+//    TreeNode<String> nodeG = new TreeNode<>("G");
+//    TreeNode<String> nodeH = new TreeNode<>("H");
+//    TreeNode<String> nodeI = new TreeNode<>("I");
+//
+//    TreeNode<String> nodeJ = new TreeNode<>("J");
+//    TreeNode<String> nodeK = new TreeNode<>("K");
+//    TreeNode<String> nodeL = new TreeNode<>("L");
+//
+//    TreeNode<String> nodeM = new TreeNode<>("M");
+//    TreeNode<String> nodeN = new TreeNode<>("N");
+//    TreeNode<String> nodeO = new TreeNode<>("O");
+//    TreeNode<String> nodeP = new TreeNode<>("P");
+//    Tree<String> tree1 = new Tree<>(root);
+//
+//    public void test() {
+//
+//        tree1.addNode(root, nodeB, nodeC, nodeD);
+//        tree1.addNode(nodeB, nodeE, nodeF);
+//
+////        tree1.addNode(nodeC, nodeG,nodeH);
+//        tree1.addNode(nodeE, nodeJ, nodeK, nodeL);
+//
+//        tree1.addNode(nodeK, nodeM, nodeN, nodeO, nodeP);
+//
+//        tree1.addNode(nodeF, nodeG);
+//
+////        tree1.addNode(nodeD, nodeG);
+//
+//        this.tree = tree1;
+//
+//    }
+
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
         mHeight = getMeasuredHeight();
         mWith = getMeasuredWidth();
 
         if (tree != null) {
             TreeNode<String> rootNode = tree.getRootNode();
+
             setNoteViewLayout(rootNode);
 
             //矫正
-            for (int i = nodeViews.size() - 1; i >= 0; i--) {
-                NodeView v = nodeViews.get(i);
-                if (v.getTreeNode().getParentNode() != null && v.getTreeNode().getChildNodes().size() > 2) {
+
+            for (NodeView v : nodeViews) {
+                if (v.getTreeNode().getParentNode() != null && v.getTreeNode().getChildNodes().size() >= 2) {
+
                     int size = v.getTreeNode().getChildNodes().size();
                     notifyFatherLayout(v.getTreeNode(),
                             findTreeNodeView(v.getTreeNode().getChildNodes().get(0)),
                             findTreeNodeView(v.getTreeNode().getChildNodes().get(size - 1)));
                 }
             }
+
+            reLayoutNode();
+
+        }
+    }
+
+    private void reLayoutNode() {
+        if (tree != null) {
+//            TreeNode<String> rootNode = tree.getRootNode();
+//            ArrayDeque<TreeNode<String>> queue = new ArrayDeque<>();
+//            queue.add(rootNode);
+//            while (!queue.isEmpty()) {
+//                TreeNode<String> poll = queue.poll();
+//
+//                LinkedList<TreeNode<String>> childNodes = poll.getChildNodes();
+//                for (TreeNode<String> item : childNodes) {
+//                    queue.add(item);
+//                }
+//            }
+
+            int size = nodeViews.size();
+            NodeView pre = null;
+            for (int i = 0; i < size; i++) {
+                //同层不同父亲
+                NodeView nodeView = nodeViews.get(i);
+                TreeNode<String> treeNode = nodeView.getTreeNode();
+                if (pre != null)
+                    correctLayout(pre, nodeView);
+                pre = nodeView;
+            }
+        }
+    }
+
+    public void correctLayout(NodeView preNodeView, NodeView botNodeView) {
+        TreeNode<String> preParentNode = preNodeView.getTreeNode().getParentNode();
+        TreeNode<String> botParentNode = botNodeView.getTreeNode().getParentNode();
+
+        if (preNodeView.getTreeNode().getFloor() == botNodeView.getTreeNode().getFloor()
+                && preParentNode != null && botParentNode != null
+                && preParentNode != botParentNode) {
+
+            int bottom = preNodeView.getBottom();
+            int top = botNodeView.getTop();
+            int dx = bottom - top + dp2px(mContext, 2);
+
+            Log.i("should move", preNodeView.getText() + "," + botNodeView.getText());
+
+            if (dx > 0) {
+                //前一个节点有移动的可能
+                //后一个节点也有移动的可能；
+
+                //如果节点在父节点的上，前节点向上移动
+
+                //如果在父节点的中间，需要后节点下移动
+                //如果在父节点的下，preParentNode
+                LinkedList<TreeNode<String>> childNodes = preParentNode.getParentNode().getChildNodes();
+                int size = childNodes.size();
+                int mid = size / 2;
+                int index = 0;
+                for (int i = 0; i < size; i++) {
+                    if (childNodes.get(i) == preParentNode) {
+                        index = i;
+                        Log.i("...", index + ">>>" + preParentNode.getValue());
+                        continue;
+                    }
+                }
+
+                if (index < mid) {
+                    moveLayout(findTreeNodeView(preParentNode), -dx);
+                } else {
+                    moveLayout(findTreeNodeView(botParentNode), dx);
+                }
+            }
+
         }
     }
 
@@ -133,6 +255,7 @@ public class TreeView extends RelativeLayout {
         if (size == 0) {
             return;
         } else if (size == 1) {
+
             TreeNode<String> midTreeNode = childNodes.get(0);
             NodeView midView = findTreeNodeView(midTreeNode);
 
@@ -153,19 +276,20 @@ public class TreeView extends RelativeLayout {
             int dxTopStartY = startY;
             int dxBottomStartY = startY;
 
+            //梯度减少
+            double pow = Math.pow(0.5, rootNode.getFloor());
+            Log.i("pow", pow + "");
 
             if (r != 0) {//奇数
                 //layout中间的
                 TreeNode<String> midTreeNode = childNodes.get(mid);
                 NodeView midView = findTreeNodeView(midTreeNode);
                 Log.i("view", midView + "");
-
                 startY = startY - midView.getMeasuredHeight() / 2;
-
                 midView.layout(startX, startY, startX + midView.getMeasuredWidth(), startY + midView.getMeasuredHeight());
-
                 dxTopStartY = midView.getTop();
                 dxBottomStartY = midView.getTop() + midView.getMeasuredHeight();
+
                 setNoteViewLayout(midTreeNode);
             }
 
@@ -182,16 +306,15 @@ public class TreeView extends RelativeLayout {
                 Log.i("view", bottomView + "");
 
                 //上
-                dxTopStartY = dxTopStartY - mDy - topView.getMeasuredHeight();
+                dxTopStartY = (int) (dxTopStartY - mDy * pow - topView.getMeasuredHeight());
                 topView.layout(startX, dxTopStartY, startX + topView.getMeasuredWidth(), dxTopStartY + topView.getMeasuredHeight());
+
                 setNoteViewLayout(topNode);
 
                 //下
-                dxBottomStartY = dxBottomStartY + mDy;
+                dxBottomStartY = (int) (dxBottomStartY + mDy * pow);
                 bottomView.layout(startX, dxBottomStartY, startX + bottomView.getMeasuredWidth(), dxBottomStartY + bottomView.getMeasuredHeight());
-
                 dxBottomStartY = dxBottomStartY + bottomView.getMeasuredHeight();
-
                 setNoteViewLayout(bottomNode);
             }
 
@@ -221,74 +344,76 @@ public class TreeView extends RelativeLayout {
             e.printStackTrace();
         }
 
+        int should_dy = 0;
+        int upDy = 0;
+        int downDy = 0;
+        NodeView rootView = findTreeNodeView(fatherNode);
         if (preRootView != null) {
-
-            NodeView rootView = findTreeNodeView(fatherNode);
-
-//            LinkedList<TreeNode<String>> cs = preRootView.getTreeNode().getChildNodes();
-//            if (cs.size() > 2) {
-//                preRootView = findTreeNodeView(cs.get(cs.size() - 1));
-//            }
-
             //先处理上层
-            int haveHeightTop = rootView.getTop() - preRootView.getTop() - preRootView.getMeasuredHeight();
+            int haveHeightTop = rootView.getTop() - (preRootView.getTop() + preRootView.getMeasuredHeight());
             int shouldHeightTop = rootView.getTop() - (shouldTopView.getTop() - mDy);
-            int should_dy = shouldHeightTop - haveHeightTop;
+            upDy = shouldHeightTop - haveHeightTop;
 
-            moveDown(rootView, should_dy);
-            LinkedList<TreeNode<String>> childNodes = fatherNode.getParentNode().getChildNodes();
-            boolean shouldMove = false;
-
-            for (int i = 0; i < childNodes.size(); i++) {
-                if (shouldMove) {
-                    moveDown(findTreeNodeView(childNodes.get(i)), should_dy);
-                }
-                if (childNodes.get(i) == fatherNode) {
-                    shouldMove = true;
-                } else if (childNodes.get(i).getFloor() != fatherNode.getFloor()) {
-                    shouldMove = false;
-                }
-            }
         }
 
         if (botRootView != null) {
-
-            NodeView rootView = findTreeNodeView(fatherNode);
             //下层
             int haveHeightTop = botRootView.getTop() - (rootView.getTop() + rootView.getMeasuredHeight() + mDy);
             int shouldHeightTop = shouldBottomView.getTop() - rootView.getTop();
+            downDy = shouldHeightTop - haveHeightTop;
+        }
 
-            int should_dy = shouldHeightTop - haveHeightTop;
+        //判断是否在中线
+        LinkedList<TreeNode<String>> childNodes = fatherNode.getParentNode().getChildNodes();
+        int size = childNodes.size();
 
-            moveDown(botRootView, should_dy);
-            TreeNode<String> should = null;
-            try {
-                should = tree.getLowNode(botRootView.getTreeNode());
-                while (should != null) {
-                    moveDown(findTreeNodeView(should), should_dy);
-                    should = tree.getLowNode(should);
+        if (size >= 2) {
+
+            int mid = size / 2;
+            int index = 0;
+            for (int i = 0; i < size; i++) {
+                if (childNodes.get(i) == fatherNode) {
+                    index = i;
+                    Log.i("index", index + ">>>" + fatherNode.getValue());
+                    continue;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            }
+
+            should_dy = downDy + upDy;
+
+            if (should_dy > 0) {
+                if (index == mid) {
+                    moveLayout(preRootView, -upDy);
+                    moveLayout(botRootView, downDy);
+                } else if (index < mid) {
+                    moveLayout(rootView, -should_dy);
+                } else {
+                    moveLayout(rootView, should_dy);
+                }
+
             }
 
         }
-
     }
 
-    private void moveDown(NodeView rootView, int should_dy) {
+    private void moveLayout(NodeView rootView, int should_dy) {
 
-        int l = rootView.getLeft();
-        int t = rootView.getTop() + should_dy;
-        rootView.layout(l, t, l + rootView.getMeasuredWidth(), t + rootView.getMeasuredHeight());
+        Deque<TreeNode<String>> queue = new ArrayDeque<>();
+        TreeNode<String> rootNode = rootView.getTreeNode();
+        queue.add(rootNode);
+        while (!queue.isEmpty()) {
 
-        //子节点也要移动
-        LinkedList<TreeNode<String>> childNodes = rootView.getTreeNode().getChildNodes();
+            rootNode = (TreeNode<String>) queue.poll();
+            rootView = findTreeNodeView(rootNode);
+            int l = rootView.getLeft();
+            int t = rootView.getTop() + should_dy;
+            rootView.layout(l, t, l + rootView.getMeasuredWidth(), t + rootView.getMeasuredHeight());
 
-        for (TreeNode<String> child : childNodes) {
-            moveDown(findTreeNodeView(child), should_dy);
+            LinkedList<TreeNode<String>> childNodes = rootNode.getChildNodes();
+            for (TreeNode<String> item : childNodes) {
+                queue.add(item);
+            }
         }
-
     }
 
     @Override
@@ -314,8 +439,19 @@ public class TreeView extends RelativeLayout {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2);
-        paint.setColor(Color.BLUE);
+
+        float width = 2f;
+        if (from instanceof NodeView) {
+            NodeView fromNodeView = (NodeView) from;
+            double pow = Math.pow(-0.5, fromNodeView.getTreeNode().getFloor() + 1);
+            width = (float) (width - width * pow);
+        }
+        if (width < 0.5f) {
+            width = 0.5f;
+        }
+
+        paint.setStrokeWidth(dp2px(mContext, width));
+        paint.setColor(mContext.getResources().getColor(R.color.chelsea_cucumber));
 
         int top = from.getTop();
         int formY = top + from.getMeasuredHeight() / 2;
@@ -327,7 +463,7 @@ public class TreeView extends RelativeLayout {
 
         Path path = new Path();
         path.moveTo(formX, formY);
-        path.quadTo(toX - dp2px(mContext, 2), toY, toX, toY);
+        path.quadTo(toX - dp2px(mContext, 15), toY, toX, toY);
 
         canvas.drawPath(path, paint);
     }

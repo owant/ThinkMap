@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 //        TreeNode<String> nodeP = new TreeNode<>("P");
 
 
-        TreeNode<String> root = new TreeNode<>("我的项目");
+        TreeNode<String> root = new TreeNode<>("我的项目\n计划");
 
         TreeNode<String> nodeB = new TreeNode<>("消息");
         TreeNode<String> nodeC = new TreeNode<>("通讯录");
@@ -59,18 +59,27 @@ public class MainActivity extends AppCompatActivity {
         TreeNode<String> nodeN = new TreeNode<>("N");
         TreeNode<String> nodeO = new TreeNode<>("O");
         TreeNode<String> nodeP = new TreeNode<>("P");
+        TreeNode<String> nodeR = new TreeNode<>("R");
+        TreeNode<String> nodeS = new TreeNode<>("S");
+        TreeNode<String> nodeZ = new TreeNode<>("Z");
+        TreeNode<String> nodey = new TreeNode<>("Y");
+        TreeNode<String> nodey1 = new TreeNode<>("你好");
 
         Tree<String> tree = new Tree<>(root);
 
         tree.addNode(root, nodeB, nodeC, nodeD);
+
         tree.addNode(nodeB, nodeE, nodeF);
-//        tree.addNode(nodeC, nodeG,nodeH);
+        tree.addNode(nodeC, nodeG, nodeH, nodeI);
         tree.addNode(nodeD, nodeJ, nodeK, nodeL);
-        tree.addNode(nodeK, nodeM, nodeN, nodeO, nodeP);
 
-        tree.addNode(nodeE, nodeG, nodeH, nodeI);
-//        tree.addNode(nodeD, nodeG);
 
+        tree.addNode(nodeH, nodeM, nodeR, nodeS, nodeZ);
+//        tree.addNode(nodeS, nodey,nodey1);
+
+
+//        tree.addNode(nodeE, nodeG, nodeH, nodeI);
+////        tree.addNode(nodeD, nodeG);
 
         treeView.setTree(tree);
     }
