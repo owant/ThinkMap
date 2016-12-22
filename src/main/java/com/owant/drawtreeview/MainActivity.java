@@ -9,37 +9,13 @@ import com.owant.drawtreeview.view.TreeView;
 
 public class MainActivity extends AppCompatActivity {
 
-    TreeView treeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        treeView = (TreeView) findViewById(R.id.activity_main);
-
-//        TreeNode<String> root = new TreeNode<>("A");
-//        TreeNode<String> nodeB = new TreeNode<>("B");
-//        TreeNode<String> nodeC = new TreeNode<>("C");
-//        TreeNode<String> nodeD = new TreeNode<>("D");
-//        TreeNode<String> nodeE = new TreeNode<>("E");
-//        TreeNode<String> nodeF = new TreeNode<>("F");
-//        TreeNode<String> nodeG = new TreeNode<>("G");
-//        TreeNode<String> nodeH = new TreeNode<>("H");
-//        TreeNode<String> nodeI = new TreeNode<>("I");
-//
-//        TreeNode<String> nodeJ = new TreeNode<>("J");
-//        TreeNode<String> nodeK = new TreeNode<>("K");
-//        TreeNode<String> nodeL = new TreeNode<>("L");
-//
-//        TreeNode<String> nodeM = new TreeNode<>("M");
-//        TreeNode<String> nodeN = new TreeNode<>("N");
-//        TreeNode<String> nodeO = new TreeNode<>("O");
-//        TreeNode<String> nodeP = new TreeNode<>("P");
-
-
         TreeNode<String> root = new TreeNode<>("我的项目\n计划");
-
         TreeNode<String> nodeB = new TreeNode<>("消息");
         TreeNode<String> nodeC = new TreeNode<>("通讯录");
         TreeNode<String> nodeD = new TreeNode<>("空间");
@@ -66,21 +42,13 @@ public class MainActivity extends AppCompatActivity {
         TreeNode<String> nodey1 = new TreeNode<>("你好");
 
         Tree<String> tree = new Tree<>(root);
-
         tree.addNode(root, nodeB, nodeC, nodeD);
-
         tree.addNode(nodeB, nodeE, nodeF);
         tree.addNode(nodeC, nodeG, nodeH, nodeI);
         tree.addNode(nodeD, nodeJ, nodeK, nodeL);
-
-
         tree.addNode(nodeH, nodeM, nodeR, nodeS, nodeZ);
-//        tree.addNode(nodeS, nodey,nodey1);
 
-
-//        tree.addNode(nodeE, nodeG, nodeH, nodeI);
-////        tree.addNode(nodeD, nodeG);
-
+        TreeView treeView = (TreeView) findViewById(R.id.tree_view);
         treeView.setTree(tree);
     }
 

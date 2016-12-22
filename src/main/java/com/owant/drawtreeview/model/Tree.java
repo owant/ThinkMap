@@ -58,11 +58,18 @@ public class Tree<T> {
         this.rootNode = rootNode;
     }
 
+    /**
+     * 同一个父节点的上下
+     *
+     * @param midPreNode
+     * @return
+     * @throws NotFindNodeException
+     */
     public TreeNode<T> getLowNode(TreeNode<T> midPreNode) throws NotFindNodeException {
         TreeNode<T> find = null;
         TreeNode<T> parentNode = midPreNode.getParentNode();
 
-        if (parentNode != null && parentNode.getChildNodes().size() > 2) {
+        if (parentNode != null && parentNode.getChildNodes().size() >= 2) {
             Deque<TreeNode<T>> queue = new ArrayDeque<>();
             TreeNode<T> rootNode = parentNode;
             queue.add(rootNode);
@@ -101,8 +108,9 @@ public class Tree<T> {
         TreeNode<T> find = null;
 
         if (parentNode != null && parentNode.getChildNodes().size() > 0) {
+
             Deque<TreeNode<T>> queue = new ArrayDeque<>();
-            TreeNode<T> rootNode = getRootNode();
+            TreeNode<T> rootNode = parentNode;
             queue.add(rootNode);
 
             while (!queue.isEmpty()) {
@@ -114,7 +122,6 @@ public class Tree<T> {
                 }
 
                 find = rootNode;
-                System.out.println(rootNode.getValue());
                 LinkedList<TreeNode<T>> childNodes = rootNode.getChildNodes();
                 if (childNodes.size() > 0) {
                     for (TreeNode<T> item : childNodes) {

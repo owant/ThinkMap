@@ -1,6 +1,5 @@
 package com.owant.drawtreeview;
 
-import com.owant.drawtreeview.model.NotFindNodeException;
 import com.owant.drawtreeview.model.Tree;
 import com.owant.drawtreeview.model.TreeNode;
 
@@ -12,53 +11,61 @@ public class MainTest {
 
     public static void main(String[] args) {
 
-        TreeNode<String> root = new TreeNode<>("A");
-        Tree<String> tree = new Tree<>(root);
+//        String format = "TreeNode<String> node{0} = new TreeNode<>(\"{0}\");";
+//        char a = 'A';
+//        for (char i = a; i < 'Z'; i++) {
+//            System.out.println(format.replace("{0}", i + ""));
+//        }
 
-        //nodes
-        TreeNode<String> node1 = new TreeNode<>("B");
-        TreeNode<String> node2 = new TreeNode<>("C");
-        TreeNode<String> node3 = new TreeNode<>("D");
-        TreeNode<String> node4 = new TreeNode<>("E");
-        TreeNode<String> node5 = new TreeNode<>("F");
-        TreeNode<String> node6 = new TreeNode<>("G");
-        TreeNode<String> node7 = new TreeNode<>("H");
-        TreeNode<String> node8 = new TreeNode<>("I");
+        TreeNode<String> nodeA = new TreeNode<>("A");
+        TreeNode<String> nodeB = new TreeNode<>("B");
+        TreeNode<String> nodeC = new TreeNode<>("C");
+        TreeNode<String> nodeD = new TreeNode<>("D");
+        TreeNode<String> nodeE = new TreeNode<>("E");
+        TreeNode<String> nodeF = new TreeNode<>("F");
+        TreeNode<String> nodeG = new TreeNode<>("G");
+        TreeNode<String> nodeH = new TreeNode<>("H");
+        TreeNode<String> nodeI = new TreeNode<>("I");
+        TreeNode<String> nodeJ = new TreeNode<>("J");
+        TreeNode<String> nodeK = new TreeNode<>("K");
+        TreeNode<String> nodeL = new TreeNode<>("L");
+        TreeNode<String> nodeM = new TreeNode<>("M");
+        TreeNode<String> nodeN = new TreeNode<>("N");
+        TreeNode<String> nodeO = new TreeNode<>("O");
+        TreeNode<String> nodeP = new TreeNode<>("P");
+        TreeNode<String> nodeQ = new TreeNode<>("Q");
+        TreeNode<String> nodeR = new TreeNode<>("R");
+        TreeNode<String> nodeS = new TreeNode<>("S");
+        TreeNode<String> nodeT = new TreeNode<>("T");
+        TreeNode<String> nodeU = new TreeNode<>("U");
+        TreeNode<String> nodeV = new TreeNode<>("V");
+        TreeNode<String> nodeW = new TreeNode<>("W");
+        TreeNode<String> nodeX = new TreeNode<>("X");
+        TreeNode<String> nodeY = new TreeNode<>("Y");
 
-        /**
-         *                A
-         *           C        B
-         *     F     E    D
-         * G  H  I
-         */
-        //build tree
-        tree.addNode(root, node1, node2);
-        tree.addNode(node1, node3, node4, node5);
-        tree.addNode(node5, node6, node7, node8);
 
-        tree.printTree();
+        Tree<String> tree = new Tree<>(nodeA);
+        tree.addNode(nodeA, nodeB, nodeC, nodeD, nodeJ);
+        tree.addNode(nodeC, nodeO, nodeP, nodeQ);
+        tree.addNode(nodeD, nodeE, nodeF, nodeG, nodeH);
+        tree.addNode(nodeG, nodeK, nodeL, nodeM, nodeN);
 
-        System.out.println("\n");
+        synchronized (args) {
 
-        tree.printTree2();
+            tree.printTree2();
+            System.out.println("-----");
 
-        System.out.println("\n");
 
-        TreeNode<String> preNode = null;
-        try {
-            preNode = tree.getPreNode(node6);
-            System.out.println("find:" + preNode.getValue());
-
-        } catch (NotFindNodeException e) {
-            e.printStackTrace();
+            try {
+                TreeNode<String> temp = tree.getPreNode(nodeE);
+                while (temp != null) {
+                    System.out.println("pre:" + temp.getValue());
+                    temp = tree.getPreNode(temp);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
-
-//        System.out.println("......");
-//        TreeNode<String> lowNode = tree.getLowNode(node6);
-//        System.out.println("find:"+lowNode.getValue());
-//        System.out.println("......");
-
 
     }
 }
