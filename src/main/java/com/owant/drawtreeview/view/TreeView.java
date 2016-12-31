@@ -19,6 +19,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Stack;
 
 /**
  * Created by owant on 17/12/2016.
@@ -84,16 +85,34 @@ public class TreeView extends ViewGroup {
 //    TreeNode<String> nodeW = new TreeNode<>("W");
 //    TreeNode<String> nodeX = new TreeNode<>("X");
 //    TreeNode<String> nodeY = new TreeNode<>("Y");
+//    TreeNode<String> nodeZ = new TreeNode<>("Z");
 //
+//    TreeNode<String> info = new TreeNode<>("我爱你");
+//    TreeNode<String> info1 = new TreeNode<>("我爱你");
+//    TreeNode<String> info2 = new TreeNode<>("我爱你");
+//    TreeNode<String> info3 = new TreeNode<>("我爱你");
+//    TreeNode<String> info4 = new TreeNode<>("我爱你");
+//    TreeNode<String> info5 = new TreeNode<>("我爱你");
+//    TreeNode<String> info6 = new TreeNode<>("我爱你");
+
 //    private void test() {
 //        Tree<String> tree = new Tree<>(nodeA);
-//        tree.addNode(nodeA, nodeC, nodeD, nodeJ);
-//        tree.addNode(nodeC, nodeO, nodeP, nodeQ);
-//        tree.addNode(nodeD, nodeE, nodeF, nodeG, nodeH);
-//        tree.addNode(nodeE, nodeY, nodeX, nodeW, nodeR, nodeT);
-//        tree.addNode(nodeG, nodeK, nodeL, nodeM, nodeN);
+//
+//        tree.addNode(nodeA, nodeB, nodeC, nodeD);
+//        tree.addNode(nodeB, nodeE, nodeF);
+//        tree.addNode(nodeC, nodeG, nodeH, nodeI);
+//        tree.addNode(nodeD, nodeJ, nodeK, nodeL);
+//        tree.addNode(nodeH, nodeN, nodeM, nodeO, nodeP);
+//        tree.addNode(nodeO, nodeQ, nodeT, nodeU, nodeV);
+//        tree.addNode(nodeT, nodeW, nodeX, nodeY, nodeZ);
+//        tree.addNode(nodeG, nodeR, nodeS);
+//
+//       tree.addNode(nodeN, info, info1);
+//       tree.addNode(nodeZ, info2, info3, info4);
+//       tree.addNode(nodeM, info5, info6);
+//
 //        this.setTree(tree);
-//    }
+//   }
 
     public void setTree(Tree<String> tree) {
         this.mTree = tree;
@@ -163,6 +182,8 @@ public class TreeView extends ViewGroup {
         }
 
         //基于同层纠正
+        //需要先进后出
+        Stack<SameFloorModel> correctStack = new Stack<>();
         Deque<TreeNode<String>> queue = new ArrayDeque<>();
         TreeNode<String> rootNode2 = mTree.getRootNode();
         queue.add(rootNode2);
@@ -174,8 +195,11 @@ public class TreeView extends ViewGroup {
                         temp.getParentNode() != null &&
                         temp.getParentNode() != rootNode2.getParentNode()) {
 
-                    Log.i("samefloorunsameparent", temp.getValue() + "," + rootNode2.getValue());
-                    correctInSameFloorTB(temp, rootNode2);
+                    Log.i("same_f un_same_p", temp.getValue() + "," + rootNode2.getValue());
+                    SameFloorModel m = new SameFloorModel();
+                    m.top = temp;
+                    m.bot = rootNode2;
+                    correctStack.push(m);
                 }
             }
 
@@ -186,6 +210,10 @@ public class TreeView extends ViewGroup {
                     queue.add(item);
                 }
             }
+        }
+        while (!correctStack.empty()) {
+            SameFloorModel pop = correctStack.pop();
+            correctInSameFloorTB(pop.top, pop.bot);
         }
 
 
@@ -568,7 +596,6 @@ public class TreeView extends ViewGroup {
 
     }
 
-
     @Override
     protected void dispatchDraw(Canvas canvas) {
         if (mTree != null) {
@@ -659,5 +686,9 @@ public class TreeView extends ViewGroup {
         return result;
     }
 
+    private class SameFloorModel {
+        public TreeNode<String> top;
+        public TreeNode<String> bot;
+    }
 
 }
