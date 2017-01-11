@@ -19,12 +19,10 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Stack;
 
 /**
  * Created by owant on 17/12/2016.
  */
-
 public class TreeView extends ViewGroup {
 
     /**
@@ -55,64 +53,52 @@ public class TreeView extends ViewGroup {
         mDx = dp2px(mContext, 26);
         mDy = dp2px(mContext, 22);
 
-
-//        test();
+        test();
     }
 
 
-//    TreeNode<String> nodeA = new TreeNode<>("A");
-//    TreeNode<String> nodeB = new TreeNode<>("B");
-//    TreeNode<String> nodeC = new TreeNode<>("C");
-//    TreeNode<String> nodeD = new TreeNode<>("D");
-//    TreeNode<String> nodeE = new TreeNode<>("E");
-//    TreeNode<String> nodeF = new TreeNode<>("F");
-//    TreeNode<String> nodeG = new TreeNode<>("G");
-//    TreeNode<String> nodeH = new TreeNode<>("H");
-//    TreeNode<String> nodeI = new TreeNode<>("I");
-//    TreeNode<String> nodeJ = new TreeNode<>("J");
-//    TreeNode<String> nodeK = new TreeNode<>("K");
-//    TreeNode<String> nodeL = new TreeNode<>("L");
-//    TreeNode<String> nodeM = new TreeNode<>("M");
-//    TreeNode<String> nodeN = new TreeNode<>("N");
-//    TreeNode<String> nodeO = new TreeNode<>("O");
-//    TreeNode<String> nodeP = new TreeNode<>("P");
-//    TreeNode<String> nodeQ = new TreeNode<>("Q");
-//    TreeNode<String> nodeR = new TreeNode<>("R");
-//    TreeNode<String> nodeS = new TreeNode<>("S");
-//    TreeNode<String> nodeT = new TreeNode<>("T");
-//    TreeNode<String> nodeU = new TreeNode<>("U");
-//    TreeNode<String> nodeV = new TreeNode<>("V");
-//    TreeNode<String> nodeW = new TreeNode<>("W");
-//    TreeNode<String> nodeX = new TreeNode<>("X");
-//    TreeNode<String> nodeY = new TreeNode<>("Y");
-//    TreeNode<String> nodeZ = new TreeNode<>("Z");
-//
-//    TreeNode<String> info = new TreeNode<>("我爱你");
-//    TreeNode<String> info1 = new TreeNode<>("我爱你");
-//    TreeNode<String> info2 = new TreeNode<>("我爱你");
-//    TreeNode<String> info3 = new TreeNode<>("我爱你");
-//    TreeNode<String> info4 = new TreeNode<>("我爱你");
-//    TreeNode<String> info5 = new TreeNode<>("我爱你");
-//    TreeNode<String> info6 = new TreeNode<>("我爱你");
+    TreeNode<String> nodeA = new TreeNode<>("A");
+    TreeNode<String> nodeB = new TreeNode<>("B");
+    TreeNode<String> nodeC = new TreeNode<>("C");
+    TreeNode<String> nodeD = new TreeNode<>("D");
+    TreeNode<String> nodeE = new TreeNode<>("E");
+    TreeNode<String> nodeF = new TreeNode<>("F");
+    TreeNode<String> nodeG = new TreeNode<>("G");
+    TreeNode<String> nodeH = new TreeNode<>("H");
+    TreeNode<String> nodeI = new TreeNode<>("I");
+    TreeNode<String> nodeJ = new TreeNode<>("J");
+    TreeNode<String> nodeK = new TreeNode<>("K");
+    TreeNode<String> nodeL = new TreeNode<>("L");
+    TreeNode<String> nodeM = new TreeNode<>("M");
+    TreeNode<String> nodeN = new TreeNode<>("N");
+    TreeNode<String> nodeO = new TreeNode<>("O");
+    TreeNode<String> nodeP = new TreeNode<>("P");
+    TreeNode<String> nodeQ = new TreeNode<>("Q");
+    TreeNode<String> nodeR = new TreeNode<>("R");
+    TreeNode<String> nodeS = new TreeNode<>("S");
+    TreeNode<String> nodeT = new TreeNode<>("T");
+    TreeNode<String> nodeU = new TreeNode<>("U");
+    TreeNode<String> nodeV = new TreeNode<>("V");
+    TreeNode<String> nodeW = new TreeNode<>("W");
+    TreeNode<String> nodeX = new TreeNode<>("X");
+    TreeNode<String> nodeY = new TreeNode<>("Y");
+    TreeNode<String> nodeZ = new TreeNode<>("Z");
 
-//    private void test() {
-//        Tree<String> tree = new Tree<>(nodeA);
-//
-//        tree.addNode(nodeA, nodeB, nodeC, nodeD);
-//        tree.addNode(nodeB, nodeE, nodeF);
-//        tree.addNode(nodeC, nodeG, nodeH, nodeI);
-//        tree.addNode(nodeD, nodeJ, nodeK, nodeL);
-//        tree.addNode(nodeH, nodeN, nodeM, nodeO, nodeP);
-//        tree.addNode(nodeO, nodeQ, nodeT, nodeU, nodeV);
-//        tree.addNode(nodeT, nodeW, nodeX, nodeY, nodeZ);
-//        tree.addNode(nodeG, nodeR, nodeS);
-//
-//       tree.addNode(nodeN, info, info1);
-//       tree.addNode(nodeZ, info2, info3, info4);
-//       tree.addNode(nodeM, info5, info6);
-//
-//        this.setTree(tree);
-//   }
+    private void test() {
+        Tree<String> tree = new Tree<>(nodeA);
+        tree.addNode(nodeA, nodeB, nodeC, nodeD);
+
+        tree.addNode(nodeC, nodeE);
+        tree.addNode(nodeB, nodeF);
+        tree.addNode(nodeD, nodeG);
+
+        tree.addNode(nodeE, nodeH, nodeI, nodeJ, nodeK, nodeL);
+//        tree.addNode(nodeF, nodeM);
+//        tree.addNode(nodeG, nodeN);
+
+        tree.addNode(nodeK,nodeO,nodeP,nodeQ,nodeR);
+        setTree(tree);
+    }
 
     public void setTree(Tree<String> tree) {
         this.mTree = tree;
@@ -176,61 +162,68 @@ public class TreeView extends ViewGroup {
         //基本分布
         nodeLayout(mTree.getRootNode());
 
-        //基于父子纠正
-        for (NodeView nv : mNodesViews) {
-            fatherChildCorrect(nv);
-        }
 
-        //基于同层纠正
-        //需要先进后出
-        Stack<SameFloorModel> correctStack = new Stack<>();
-        Deque<TreeNode<String>> queue = new ArrayDeque<>();
-        TreeNode<String> rootNode2 = mTree.getRootNode();
-        queue.add(rootNode2);
-        TreeNode<String> temp = null;
-        while (!queue.isEmpty()) {
-            rootNode2 = (TreeNode<String>) queue.poll();
-            if (temp != null) {
-                if (temp.getFloor() == rootNode2.getFloor() &&
-                        temp.getParentNode() != null &&
-                        temp.getParentNode() != rootNode2.getParentNode()) {
+        //纠正
+        //基于某点，找到父亲点（不动点），之后基于父亲点找上下关系，进行上下移动
 
-                    Log.i("same_f un_same_p", temp.getValue() + "," + rootNode2.getValue());
-                    SameFloorModel m = new SameFloorModel();
-                    m.top = temp;
-                    m.bot = rootNode2;
-                    correctStack.push(m);
-                }
-            }
 
-            temp = rootNode2;
-            LinkedList<TreeNode<String>> childNodes = rootNode2.getChildNodes();
-            if (childNodes.size() > 0) {
-                for (TreeNode<String> item : childNodes) {
-                    queue.add(item);
-                }
-            }
-        }
-        while (!correctStack.empty()) {
-            SameFloorModel pop = correctStack.pop();
-            correctInSameFloorTB(pop.top, pop.bot);
-        }
+
+
+//        //基于父子纠正
+//        int size = mNodesViews.size();
+//        for (int i = size - 1; i > -1; i--) {
+//            fatherChildCorrect(mNodesViews.get(i));
+//        }
+
+//        correctInRootToChildTB(nodeK,nodeO,nodeR);
+//
+//        //基于同层纠正
+//        //需要先进后出
+//        Stack<SameFloorModel> correctStack = new Stack<>();
+//        Deque<TreeNode<String>> queue = new ArrayDeque<>();
+//        TreeNode<String> rootNode2 = mTree.getRootNode();
+//        queue.add(rootNode2);
+//        TreeNode<String> temp = null;
+//        while (!queue.isEmpty()) {
+//            rootNode2 = (TreeNode<String>) queue.poll();
+//            if (temp != null) {
+//                if (temp.getFloor() == rootNode2.getFloor() &&
+//                        temp.getParentNode() != null &&
+//                        temp.getParentNode() != rootNode2.getParentNode()) {
+//
+//                    Log.i("same_f un_same_p", temp.getValue() + "," + rootNode2.getValue());
+//                    SameFloorModel m = new SameFloorModel();
+//                    m.top = temp;
+//                    m.bot = rootNode2;
+//                    correctStack.push(m);
+//                }
+//            }
+//
+//            temp = rootNode2;
+//            LinkedList<TreeNode<String>> childNodes = rootNode2.getChildNodes();
+//            if (childNodes.size() > 0) {
+//                for (TreeNode<String> item : childNodes) {
+//                    queue.add(item);
+//                }
+//            }
+//        }
+//        while (!correctStack.empty()) {
+//            SameFloorModel pop = correctStack.pop();
+//            correctInSameFloorTB(pop.top, pop.bot);
+//        }
 
 
     }
 
     private void fatherChildCorrect(NodeView nv) {
         int count = nv.getTreeNode().getChildNodes().size();
+
         if (nv.getParent() != null && count >= 2) {
             TreeNode<String> tn = nv.getTreeNode().getChildNodes().get(0);
             TreeNode<String> bn = nv.getTreeNode().getChildNodes().get(count - 1);
 
             Log.i("see fc", nv.getTreeNode().getValue() + ":" + tn.getValue() + "," + bn.getValue());
-            correctInRootToChildTB(
-                    nv.getTreeNode(),
-                    tn,
-                    bn
-            );
+            correctInRootToChildTB(nv.getTreeNode(), tn, bn);
         }
     }
 
@@ -649,6 +642,7 @@ public class TreeView extends ViewGroup {
     }
 
     private void moveNodeLayout(NodeView rootView, int dy) {
+
         Deque<TreeNode<String>> queue = new ArrayDeque<>();
         TreeNode<String> rootNode = rootView.getTreeNode();
         queue.add(rootNode);

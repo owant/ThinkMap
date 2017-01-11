@@ -1,6 +1,7 @@
 package com.owant.drawtreeview.model;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Stack;
@@ -29,9 +30,8 @@ public class Tree<T> {
     public void addNode(TreeNode<T> start, TreeNode<T>... nodes) {
         int index = 1;
         TreeNode<T> temp = start;
-        while (temp.getParentNode() != null) {
-            index++;
-            temp = temp.getParentNode();
+        if (temp.getParentNode() != null) {
+            index = temp.getParentNode().floor;
         }
 
         for (TreeNode<T> t : nodes) {
@@ -65,7 +65,7 @@ public class Tree<T> {
      * @return
      * @throws NotFindNodeException
      */
-    public TreeNode<T> getLowNode(TreeNode<T> midPreNode) throws NotFindNodeException {
+    public TreeNode<T> getLowNode(TreeNode<T> midPreNode) {
         TreeNode<T> find = null;
         TreeNode<T> parentNode = midPreNode.getParentNode();
 
@@ -86,8 +86,6 @@ public class Tree<T> {
 
                 //到了该元素
                 if (rootNode == midPreNode) up = true;
-
-                System.out.println(rootNode.getValue());
                 LinkedList<TreeNode<T>> childNodes = rootNode.getChildNodes();
                 if (childNodes.size() > 0) {
                     for (TreeNode<T> item : childNodes) {
@@ -96,13 +94,10 @@ public class Tree<T> {
                 }
             }
         }
-        if (find == null) {
-            throw new NotFindNodeException("getLowNode(TreeNode<T> midNode) NotFindNodeException!");
-        }
         return find;
     }
 
-    public TreeNode<T> getPreNode(TreeNode<T> midPreNode) throws NotFindNodeException {
+    public TreeNode<T> getPreNode(TreeNode<T> midPreNode) {
 
         TreeNode<T> parentNode = midPreNode.getParentNode();
         TreeNode<T> find = null;
@@ -134,41 +129,40 @@ public class Tree<T> {
                 find = null;
             }
         }
-
-        if (find == null) {
-            throw new NotFindNodeException("getPreNode(TreeNode<T> midPreNode) NotFindNodeException!");
-        }
         return find;
+    }
+
+    public ArrayList<TreeNode<T>> getAllLowNodes(TreeNode<T> addNode) {
+        ArrayList<TreeNode<T>> array = new ArrayList<>();
+        TreeNode<T> parentNode = addNode.getParentNode();
+        while (parentNode != null) {
+            TreeNode<T> lowNode = getLowNode(parentNode);
+            while (lowNode != null) {
+                array.add(lowNode);
+                lowNode = getLowNode(lowNode);
+            }
+            parentNode = parentNode.getParentNode();
+        }
+        return array;
+    }
+
+    public ArrayList<TreeNode<T>> getAllPreNodes(TreeNode<T> addNode) {
+        ArrayList<TreeNode<T>> array = new ArrayList<>();
+        TreeNode<T> parentNode = addNode.getParentNode();
+        while (parentNode != null) {
+            TreeNode<T> lowNode = getPreNode(parentNode);
+            while (lowNode != null) {
+                array.add(lowNode);
+                lowNode = getPreNode(lowNode);
+            }
+            parentNode = parentNode.getParentNode();
+        }
+        return array;
     }
 
     public LinkedList<TreeNode<T>> getNodeChildNodes(TreeNode<T> node) {
         return node.getChildNodes();
     }
-
-    //    /**
-//     * input the root node to print
-//     *
-//     * @param startNode
-//     */
-//    public void printTree(TreeNode<T> startNode) {
-//        if (startNode != null) {
-//            StringBuffer dx = new StringBuffer();
-//            String value = (String) startNode.getValue();
-//            TreeNode<T> old = startNode;
-//
-//            while (startNode.getParentNode() != null) {
-//                dx.append("-");
-//                startNode = startNode.getParentNode();
-//            }
-//
-//            dx.append(value);
-//            System.out.println(dx.toString());
-//
-//            for (TreeNode<T> node : old.getChildNodes()) {
-//                printTree(node);
-//            }
-//        }
-//    }
 
     public void printTree() {
         Stack<TreeNode<T>> stack = new Stack<>();

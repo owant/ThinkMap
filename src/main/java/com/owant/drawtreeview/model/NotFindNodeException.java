@@ -5,6 +5,7 @@ package com.owant.drawtreeview.model;
  */
 
 public class NotFindNodeException extends NullPointerException {
+
     public NotFindNodeException(String detailMessage) {
         super(detailMessage);
     }
