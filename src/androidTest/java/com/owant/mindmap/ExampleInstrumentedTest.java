@@ -1,4 +1,4 @@
-package com.owant.drawtreeview;
+package com.owant.mindmap;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.owant.drawtreeview", appContext.getPackageName());
+        assertEquals("com.owant.mindmap", appContext.getPackageName());
     }
 }

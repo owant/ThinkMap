@@ -1,4 +1,4 @@
-package com.owant.drawtreeview;
+package com.owant.mindmap;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.owant.drawtreeview.model;
+package com.owant.mindmap.model;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -7,17 +7,16 @@ import java.util.LinkedList;
 import java.util.Stack;
 
 /**
- * Created by owant on 16/12/2016.
+ * Created by owant on 09/02/2017.
  */
 
-public class Tree<T> {
-
+public class TreeModel<T> {
     /**
      * the root for the tree
      */
-    public TreeNode<T> rootNode;
+    public NodeModel<T> rootNode;
 
-    public Tree(TreeNode<T> rootNode) {
+    public TreeModel(NodeModel<T> rootNode) {
         this.rootNode = rootNode;
     }
 
@@ -27,21 +26,21 @@ public class Tree<T> {
      * @param start
      * @param nodes
      */
-    public void addNode(TreeNode<T> start, TreeNode<T>... nodes) {
+    public void addNode(NodeModel<T> start, NodeModel<T>... nodes) {
         int index = 1;
-        TreeNode<T> temp = start;
+        NodeModel<T> temp = start;
         if (temp.getParentNode() != null) {
             index = temp.getParentNode().floor;
         }
 
-        for (TreeNode<T> t : nodes) {
+        for (NodeModel<T> t : nodes) {
             t.setParentNode(start);
             t.setFloor(index);
             start.getChildNodes().add(t);
         }
     }
 
-    public boolean remvoeNode(TreeNode<T> starNode, TreeNode<T> deleteNote) {
+    public boolean remvoeNode(NodeModel<T> starNode, NodeModel<T> deleteNote) {
         boolean rm = false;
         int size = starNode.getChildNodes().size();
         if (size > 0) {
@@ -50,11 +49,11 @@ public class Tree<T> {
         return rm;
     }
 
-    public TreeNode<T> getRootNode() {
+    public NodeModel<T> getRootNode() {
         return rootNode;
     }
 
-    public void setRootNode(TreeNode<T> rootNode) {
+    public void setRootNode(NodeModel<T> rootNode) {
         this.rootNode = rootNode;
     }
 
@@ -63,20 +62,19 @@ public class Tree<T> {
      *
      * @param midPreNode
      * @return
-     * @throws NotFindNodeException
      */
-    public TreeNode<T> getLowNode(TreeNode<T> midPreNode) {
-        TreeNode<T> find = null;
-        TreeNode<T> parentNode = midPreNode.getParentNode();
+    public NodeModel<T> getLowNode(NodeModel<T> midPreNode) {
+        NodeModel<T> find = null;
+        NodeModel<T> parentNode = midPreNode.getParentNode();
 
         if (parentNode != null && parentNode.getChildNodes().size() >= 2) {
-            Deque<TreeNode<T>> queue = new ArrayDeque<>();
-            TreeNode<T> rootNode = parentNode;
+            Deque<NodeModel<T>> queue = new ArrayDeque<>();
+            NodeModel<T> rootNode = parentNode;
             queue.add(rootNode);
             boolean up = false;
             while (!queue.isEmpty()) {
 
-                rootNode = (TreeNode<T>) queue.poll();
+                rootNode = (NodeModel<T>) queue.poll();
                 if (up) {
                     if (rootNode.getFloor() == midPreNode.getFloor()) {
                         find = rootNode;
@@ -86,9 +84,9 @@ public class Tree<T> {
 
                 //到了该元素
                 if (rootNode == midPreNode) up = true;
-                LinkedList<TreeNode<T>> childNodes = rootNode.getChildNodes();
+                LinkedList<NodeModel<T>> childNodes = rootNode.getChildNodes();
                 if (childNodes.size() > 0) {
-                    for (TreeNode<T> item : childNodes) {
+                    for (NodeModel<T> item : childNodes) {
                         queue.add(item);
                     }
                 }
@@ -97,19 +95,19 @@ public class Tree<T> {
         return find;
     }
 
-    public TreeNode<T> getPreNode(TreeNode<T> midPreNode) {
+    public NodeModel<T> getPreNode(NodeModel<T> midPreNode) {
 
-        TreeNode<T> parentNode = midPreNode.getParentNode();
-        TreeNode<T> find = null;
+        NodeModel<T> parentNode = midPreNode.getParentNode();
+        NodeModel<T> find = null;
 
         if (parentNode != null && parentNode.getChildNodes().size() > 0) {
 
-            Deque<TreeNode<T>> queue = new ArrayDeque<>();
-            TreeNode<T> rootNode = parentNode;
+            Deque<NodeModel<T>> queue = new ArrayDeque<>();
+            NodeModel<T> rootNode = parentNode;
             queue.add(rootNode);
 
             while (!queue.isEmpty()) {
-                rootNode = (TreeNode<T>) queue.poll();
+                rootNode = (NodeModel<T>) queue.poll();
                 //到了该元素
                 if (rootNode == midPreNode) {
                     //返回之前的值
@@ -117,9 +115,9 @@ public class Tree<T> {
                 }
 
                 find = rootNode;
-                LinkedList<TreeNode<T>> childNodes = rootNode.getChildNodes();
+                LinkedList<NodeModel<T>> childNodes = rootNode.getChildNodes();
                 if (childNodes.size() > 0) {
-                    for (TreeNode<T> item : childNodes) {
+                    for (NodeModel<T> item : childNodes) {
                         queue.add(item);
                     }
                 }
@@ -132,11 +130,11 @@ public class Tree<T> {
         return find;
     }
 
-    public ArrayList<TreeNode<T>> getAllLowNodes(TreeNode<T> addNode) {
-        ArrayList<TreeNode<T>> array = new ArrayList<>();
-        TreeNode<T> parentNode = addNode.getParentNode();
+    public ArrayList<NodeModel<T>> getAllLowNodes(NodeModel<T> addNode) {
+        ArrayList<NodeModel<T>> array = new ArrayList<>();
+        NodeModel<T> parentNode = addNode.getParentNode();
         while (parentNode != null) {
-            TreeNode<T> lowNode = getLowNode(parentNode);
+            NodeModel<T> lowNode = getLowNode(parentNode);
             while (lowNode != null) {
                 array.add(lowNode);
                 lowNode = getLowNode(lowNode);
@@ -146,11 +144,11 @@ public class Tree<T> {
         return array;
     }
 
-    public ArrayList<TreeNode<T>> getAllPreNodes(TreeNode<T> addNode) {
-        ArrayList<TreeNode<T>> array = new ArrayList<>();
-        TreeNode<T> parentNode = addNode.getParentNode();
+    public ArrayList<NodeModel<T>> getAllPreNodes(NodeModel<T> addNode) {
+        ArrayList<NodeModel<T>> array = new ArrayList<>();
+        NodeModel<T> parentNode = addNode.getParentNode();
         while (parentNode != null) {
-            TreeNode<T> lowNode = getPreNode(parentNode);
+            NodeModel<T> lowNode = getPreNode(parentNode);
             while (lowNode != null) {
                 array.add(lowNode);
                 lowNode = getPreNode(lowNode);
@@ -160,41 +158,40 @@ public class Tree<T> {
         return array;
     }
 
-    public LinkedList<TreeNode<T>> getNodeChildNodes(TreeNode<T> node) {
+    public LinkedList<NodeModel<T>> getNodeChildNodes(NodeModel<T> node) {
         return node.getChildNodes();
     }
 
     public void printTree() {
-        Stack<TreeNode<T>> stack = new Stack<>();
-        TreeNode<T> rootNode = getRootNode();
+        Stack<NodeModel<T>> stack = new Stack<>();
+        NodeModel<T> rootNode = getRootNode();
         stack.add(rootNode);
         while (!stack.isEmpty()) {
-            TreeNode<T> pop = stack.pop();
+            NodeModel<T> pop = stack.pop();
             System.out.println(pop.getValue().toString());
-            LinkedList<TreeNode<T>> childNodes = pop.getChildNodes();
-            for (TreeNode<T> item : childNodes) {
+            LinkedList<NodeModel<T>> childNodes = pop.getChildNodes();
+            for (NodeModel<T> item : childNodes) {
                 stack.add(item);
             }
         }
     }
 
     public void printTree2() {
-        Deque<TreeNode<T>> queue = new ArrayDeque<>();
-        TreeNode<T> rootNode = getRootNode();
+        Deque<NodeModel<T>> queue = new ArrayDeque<>();
+        NodeModel<T> rootNode = getRootNode();
         queue.add(rootNode);
         while (!queue.isEmpty()) {
-            rootNode = (TreeNode<T>) queue.poll();
+            rootNode = (NodeModel<T>) queue.poll();
             System.out.println(rootNode.getValue().toString());
 
-            LinkedList<TreeNode<T>> childNodes = rootNode.getChildNodes();
+            LinkedList<NodeModel<T>> childNodes = rootNode.getChildNodes();
             if (childNodes.size() > 0) {
-                for (TreeNode<T> item : childNodes) {
+                for (NodeModel<T> item : childNodes) {
                     queue.add(item);
                 }
             }
         }
 
     }
-
 
 }

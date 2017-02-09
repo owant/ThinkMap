@@ -1,4 +1,4 @@
-package com.owant.drawtreeview.view;
+package com.owant.mindmap.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,24 +6,26 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.owant.drawtreeview.R;
-import com.owant.drawtreeview.model.Tree;
-import com.owant.drawtreeview.model.TreeNode;
+import com.owant.mindmap.R;
+import com.owant.mindmap.control.MoveHandler;
+import com.owant.mindmap.model.NodeModel;
+import com.owant.mindmap.model.TreeModel;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 
-/**
- * Created by owant on 09/01/2017.
- */
+import static com.owant.mindmap.until.DensityUtils.dp2px;
 
-public class SuperTreeView extends ViewGroup {
+/**
+ * Created by owant on 09/02/2017.
+ */
+public class TreeView extends ViewGroup {
 
     /**
      * the default x,y mDx
@@ -33,82 +35,44 @@ public class SuperTreeView extends ViewGroup {
     private int mWith;
     private int mHeight;
     private Context mContext;
-    private Tree<String> mTree;
+    private TreeModel<String> mTree;
     private ArrayList<NodeView> mNodesViews;
 
-    public SuperTreeView(Context context) {
+    private MoveHandler moveHandler;
+
+    public TreeView(Context context) {
         this(context, null, 0);
     }
 
-    public SuperTreeView(Context context, AttributeSet attrs) {
+    public TreeView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SuperTreeView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TreeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
         mContext = context;
         mNodesViews = new ArrayList<>();
         mContext = context;
 
+        setClipChildren(false);
+        setClipToPadding(false);
+
         mDx = dp2px(mContext, 26);
         mDy = dp2px(mContext, 22);
 
-        test();
+        moveHandler = new MoveHandler(this);
     }
 
-    TreeNode<String> nodeA = new TreeNode<>("A");
-    TreeNode<String> nodeB = new TreeNode<>("B");
-    TreeNode<String> nodeC = new TreeNode<>("C");
-    TreeNode<String> nodeD = new TreeNode<>("D");
-    TreeNode<String> nodeE = new TreeNode<>("E");
-    TreeNode<String> nodeF = new TreeNode<>("F");
-    TreeNode<String> nodeG = new TreeNode<>("G");
-    TreeNode<String> nodeH = new TreeNode<>("H");
-    TreeNode<String> nodeI = new TreeNode<>("I");
-    TreeNode<String> nodeJ = new TreeNode<>("J");
-    TreeNode<String> nodeK = new TreeNode<>("K");
-    TreeNode<String> nodeL = new TreeNode<>("L");
-    TreeNode<String> nodeM = new TreeNode<>("M");
-    TreeNode<String> nodeN = new TreeNode<>("N");
-    TreeNode<String> nodeO = new TreeNode<>("O");
-    TreeNode<String> nodeP = new TreeNode<>("P");
-    TreeNode<String> nodeQ = new TreeNode<>("Q");
-    TreeNode<String> nodeR = new TreeNode<>("R");
-    TreeNode<String> nodeS = new TreeNode<>("S");
-    TreeNode<String> nodeT = new TreeNode<>("T");
-    TreeNode<String> nodeU = new TreeNode<>("U");
-    TreeNode<String> nodeV = new TreeNode<>("V");
-    TreeNode<String> nodeW = new TreeNode<>("W");
-    TreeNode<String> nodeX = new TreeNode<>("X");
-    TreeNode<String> nodeY = new TreeNode<>("Y");
-    TreeNode<String> nodeZ = new TreeNode<>("Z");
+    public TreeModel<String> getTreeModel() {
+        return mTree;
+    }
 
-    private void test() {
-        Tree<String> tree = new Tree<>(nodeA);
-        tree.setRootNode(nodeA);
-//        tree.addNode(nodeA, nodeB, nodeC, nodeD, nodeE);
-//        tree.addNode(nodeC, nodeI, nodeJ, nodeK, nodeL, nodeM, nodeN, nodeO);
-//        tree.addNode(nodeJ, nodeP, nodeQ, nodeR, nodeS);
-//        tree.addNode(nodeR, nodeT, nodeU, nodeV);
-//        tree.addNode(nodeK,nodeW,nodeX,nodeY,nodeZ);
+    public void setTreeModel(TreeModel<String> mTree) {
+        this.mTree = mTree;
 
-        tree.addNode(nodeA,nodeB,nodeC,nodeE);
-
-        tree.addNode(nodeB,nodeD);
-        tree.addNode(nodeC,nodeF);
-        tree.addNode(nodeE,nodeG);
-
-        tree.addNode(nodeD,nodeH);
-        tree.addNode(nodeF,nodeI);
-        tree.addNode(nodeG,nodeJ);
-
-        tree.addNode(nodeI,nodeK,nodeL,nodeM);
-        tree.addNode(nodeK,nodeN,nodeO,nodeP,nodeQ);
-        tree.addNode(nodeP,nodeR,nodeS,nodeT,nodeU,nodeV);
-
-        tree.addNode(nodeH,nodeW,nodeX,nodeY,nodeZ);
-
-        setTree(tree);
+        //进行添加节点
+        onAddNodeViews();
     }
 
     /**
@@ -116,27 +80,51 @@ public class SuperTreeView extends ViewGroup {
      */
     private void onAddNodeViews() {
         if (mTree != null) {
-            TreeNode<String> rootNode = mTree.getRootNode();
-            Deque<TreeNode<String>> deque = new ArrayDeque<>();
+            NodeModel<String> rootNode = mTree.getRootNode();
+            Deque<NodeModel<String>> deque = new ArrayDeque<>();
             deque.add(rootNode);
             while (!deque.isEmpty()) {
-                TreeNode<String> poll = deque.poll();
-                NodeView nodeView = new NodeView(mContext);
+                NodeModel<String> poll = deque.poll();
+                final NodeView nodeView = new NodeView(mContext);
                 nodeView.setTreeNode(poll);
-                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                 nodeView.setLayoutParams(lp);
 
                 this.addView(nodeView);
+
+                //set the nodeclick
+                nodeView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        performTreeItemClick(view);
+                    }
+                });
+
                 mNodesViews.add(nodeView);
 
-                LinkedList<TreeNode<String>> childNodes = poll.getChildNodes();
-                for (TreeNode<String> ch : childNodes) {
+                LinkedList<NodeModel<String>> childNodes = poll.getChildNodes();
+                for (NodeModel<String> ch : childNodes) {
                     deque.push(ch);
                 }
             }
         }
     }
 
+    /**
+     * 点击实现
+     *
+     * @param view
+     */
+    private void performTreeItemClick(View view) {
+
+    }
+
+    /**
+     * 测量自身和子控件的大小
+     *
+     * @param widthMeasureSpec
+     * @param heightMeasureSpec
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -152,26 +140,30 @@ public class SuperTreeView extends ViewGroup {
         mHeight = getMeasuredHeight();
         mWith = getMeasuredWidth();
 
-        NodeView rootView = findTreeNodeView(mTree.getRootNode());
-        if (rootView != null) {
-            //root的位置
-            rootTreeViewLayout(rootView);
-            //标准位置
-            for (NodeView nv : mNodesViews) {
-                standardTreeChildLayout(nv);
-            }
+        if (mTree != null) {
+            NodeView rootView = findTreeNodeView(mTree.getRootNode());
+            if (rootView != null) {
+                //root的位置
+                rootTreeViewLayout(rootView);
+                //标准位置
+                for (NodeView nv : mNodesViews) {
+                    standardTreeChildLayout(nv);
+                }
 
-//            //基于父子的移动
-            for (NodeView nv : mNodesViews) {
-                fatherChildCorrect(nv);
-            }
+                //基于父子的移动
+                for (NodeView nv : mNodesViews) {
+                    fatherChildCorrect(nv);
+                }
 
-//            fatherChildCorrect(findTreeNodeView(nodeC));
+            }
         }
-
-
     }
 
+    /**
+     * root节点的定位
+     *
+     * @param rootView
+     */
     private void rootTreeViewLayout(NodeView rootView) {
         int lr = mDy;
         int tr = mHeight / 2 - rootView.getMeasuredHeight() / 2;
@@ -180,24 +172,16 @@ public class SuperTreeView extends ViewGroup {
         rootView.layout(lr, tr, rr, br);
     }
 
-    @Override
-    protected void dispatchDraw(Canvas canvas) {
-        if (mTree != null) {
-            drawTreeLine(canvas, mTree.getRootNode());
-        }
-        super.dispatchDraw(canvas);
-    }
-
     /**
      * 标准的位置分布
      *
      * @param rootView
      */
     private void standardTreeChildLayout(NodeView rootView) {
-        TreeNode<String> treeNode = rootView.getTreeNode();
+        NodeModel<String> treeNode = rootView.getTreeNode();
         if (treeNode != null) {
             //所有的子节点
-            LinkedList<TreeNode<String>> childNodes = treeNode.getChildNodes();
+            LinkedList<NodeModel<String>> childNodes = treeNode.getChildNodes();
             int size = childNodes.size();
             int mid = size / 2;
             int r = size % 2;
@@ -294,6 +278,32 @@ public class SuperTreeView extends ViewGroup {
 
     }
 
+    private void fatherChildCorrect(NodeView nv) {
+        int count = nv.getTreeNode().getChildNodes().size();
+
+        if (nv.getParent() != null && count >= 2) {
+            NodeModel<String> tn = nv.getTreeNode().getChildNodes().get(0);
+            NodeModel<String> bn = nv.getTreeNode().getChildNodes().get(count - 1);
+            Log.i("see fc", nv.getTreeNode().getValue() + ":" + tn.getValue() + "," + bn.getValue());
+
+            int topDr = nv.getTop() - findTreeNodeView(tn).getBottom() + mDy;
+            int bnDr = findTreeNodeView(bn).getTop() - nv.getBottom() + mDy;
+            //上移动
+            ArrayList<NodeModel<String>> allLowNodes = mTree.getAllLowNodes(bn);
+            ArrayList<NodeModel<String>> allPreNodes = mTree.getAllPreNodes(tn);
+
+            for (NodeModel<String> low : allLowNodes) {
+                NodeView view = findTreeNodeView(low);
+                moveNodeLayout(view, bnDr);
+            }
+
+            for (NodeModel<String> pre : allPreNodes) {
+                NodeView view = findTreeNodeView(pre);
+                moveNodeLayout(view, -topDr);
+            }
+        }
+    }
+
     /**
      * 移动
      *
@@ -302,49 +312,46 @@ public class SuperTreeView extends ViewGroup {
      */
     private void moveNodeLayout(NodeView rootView, int dy) {
 
-        Deque<TreeNode<String>> queue = new ArrayDeque<>();
-        TreeNode<String> rootNode = rootView.getTreeNode();
+        Deque<NodeModel<String>> queue = new ArrayDeque<>();
+        NodeModel<String> rootNode = rootView.getTreeNode();
         queue.add(rootNode);
         while (!queue.isEmpty()) {
-            rootNode = (TreeNode<String>) queue.poll();
+            rootNode = (NodeModel<String>) queue.poll();
             rootView = findTreeNodeView(rootNode);
             int l = rootView.getLeft();
             int t = rootView.getTop() + dy;
             rootView.layout(l, t, l + rootView.getMeasuredWidth(), t + rootView.getMeasuredHeight());
 
-            LinkedList<TreeNode<String>> childNodes = rootNode.getChildNodes();
-            for (TreeNode<String> item : childNodes) {
+            LinkedList<NodeModel<String>> childNodes = rootNode.getChildNodes();
+            for (NodeModel<String> item : childNodes) {
                 queue.add(item);
             }
         }
     }
 
-    private void fatherChildCorrect(NodeView nv) {
-        int count = nv.getTreeNode().getChildNodes().size();
-
-        if (nv.getParent() != null && count >= 2) {
-            TreeNode<String> tn = nv.getTreeNode().getChildNodes().get(0);
-            TreeNode<String> bn = nv.getTreeNode().getChildNodes().get(count - 1);
-            Log.i("see fc", nv.getTreeNode().getValue() + ":" + tn.getValue() + "," + bn.getValue());
-
-            int topDr = nv.getTop() - findTreeNodeView(tn).getBottom()+mDy;
-            int bnDr = findTreeNodeView(bn).getTop() - nv.getBottom()+mDy;
-            //上移动
-            ArrayList<TreeNode<String>> allLowNodes = mTree.getAllLowNodes(bn);
-            ArrayList<TreeNode<String>> allPreNodes = mTree.getAllPreNodes(tn);
-
-            for (TreeNode<String> low : allLowNodes) {
-                NodeView view = findTreeNodeView(low);
-                moveNodeLayout(view, bnDr);
-            }
-
-            for (TreeNode<String> pre : allPreNodes) {
-                NodeView view = findTreeNodeView(pre);
-                moveNodeLayout(view, -topDr);
-            }
-        }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return moveHandler.move(event);
     }
 
+    private NodeView findTreeNodeView(NodeModel<String> node) {
+        NodeView v = null;
+        for (NodeView view : mNodesViews) {
+            if (view.getTreeNode() == node) {
+                v = view;
+                continue;
+            }
+        }
+        return v;
+    }
+
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        if (mTree != null) {
+            drawTreeLine(canvas, mTree.getRootNode());
+        }
+        super.dispatchDraw(canvas);
+    }
 
     /**
      * 绘制树形的连线
@@ -352,12 +359,15 @@ public class SuperTreeView extends ViewGroup {
      * @param canvas
      * @param root
      */
-    private void drawTreeLine(Canvas canvas, TreeNode<String> root) {
+    private void drawTreeLine(Canvas canvas, NodeModel<String> root) {
         NodeView fatherView = findTreeNodeView(root);
         if (fatherView != null) {
-            LinkedList<TreeNode<String>> childNodes = root.getChildNodes();
-            for (TreeNode<String> node : childNodes) {
+            LinkedList<NodeModel<String>> childNodes = root.getChildNodes();
+            for (NodeModel<String> node : childNodes) {
+
+                //连线
                 drawLineToView(canvas, fatherView, findTreeNodeView(node));
+                //递归
                 drawTreeLine(canvas, node);
             }
         }
@@ -372,19 +382,15 @@ public class SuperTreeView extends ViewGroup {
      */
     private void drawLineToView(Canvas canvas, View from, View to) {
 
+        if (to.getVisibility() == GONE) {
+            return;
+        }
+
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
 
         float width = 2f;
-//        if (from instanceof NodeView) {
-//            NodeView fromNodeView = (NodeView) from;
-//            double pow = Math.pow(-0.5, fromNodeView.getTreeNode().getFloor() + 1);
-//            width = (float) (width - width * pow);
-//        }
-//        if (width < 0.5f) {
-//            width = 0.5f;
-//        }
 
         paint.setStrokeWidth(dp2px(mContext, width));
         paint.setColor(mContext.getResources().getColor(R.color.chelsea_cucumber));
@@ -404,29 +410,4 @@ public class SuperTreeView extends ViewGroup {
         canvas.drawPath(path, paint);
     }
 
-    private NodeView findTreeNodeView(TreeNode<String> node) {
-        NodeView v = null;
-        for (NodeView view : mNodesViews) {
-            if (view.getTreeNode() == node) {
-                v = view;
-                continue;
-            }
-        }
-        return v;
-    }
-
-    public int dp2px(Context context, float dpVal) {
-        int result = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpVal, context.getResources()
-                .getDisplayMetrics());
-        return result;
-    }
-
-    public void setTree(Tree<String> tree) {
-        this.mTree = tree;
-        onAddNodeViews();
-    }
-
-    public Tree<String> getTree() {
-        return mTree;
-    }
 }

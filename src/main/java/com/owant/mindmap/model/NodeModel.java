@@ -1,16 +1,17 @@
-package com.owant.drawtreeview.model;
+package com.owant.mindmap.model;
 
 import java.util.LinkedList;
 
 /**
- * Created by owant on 16/12/2016.
+ * Created by owant on 09/02/2017.
  */
+public class NodeModel<T> {
 
-public class TreeNode<T> {
+
     /**
      * the parent node,if root node parent node=null;
      */
-    public TreeNode<T> parentNode;
+    public NodeModel<T> parentNode;
 
     /**
      * the data value
@@ -20,7 +21,7 @@ public class TreeNode<T> {
     /**
      * have the child nodes
      */
-    public LinkedList<TreeNode<T>> childNodes;
+    public LinkedList<NodeModel<T>> childNodes;
 
     /**
      * focus tag for the tree add nodes
@@ -32,19 +33,21 @@ public class TreeNode<T> {
      */
     public int floor;
 
-    public TreeNode(T value) {
-        this.value = value;
-        this.childNodes = new LinkedList<TreeNode<T>>();
+    public boolean hidden = false;
 
-//        this.focus = false;
-//        this.parentNode = null;
+    public NodeModel(T value) {
+        this.value = value;
+        this.childNodes = new LinkedList<NodeModel<T>>();
+
+        this.focus = false;
+        this.parentNode = null;
     }
 
-    public TreeNode<T> getParentNode() {
+    public NodeModel<T> getParentNode() {
         return parentNode;
     }
 
-    public void setParentNode(TreeNode<T> parentNode) {
+    public void setParentNode(NodeModel<T> parentNode) {
         this.parentNode = parentNode;
     }
 
@@ -56,11 +59,11 @@ public class TreeNode<T> {
         this.value = value;
     }
 
-    public LinkedList<TreeNode<T>> getChildNodes() {
+    public LinkedList<NodeModel<T>> getChildNodes() {
         return childNodes;
     }
 
-    public void setChildNodes(LinkedList<TreeNode<T>> childNodes) {
+    public void setChildNodes(LinkedList<NodeModel<T>> childNodes) {
         this.childNodes = childNodes;
     }
 
@@ -78,5 +81,13 @@ public class TreeNode<T> {
 
     public void setFloor(int floor) {
         this.floor = floor;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 }

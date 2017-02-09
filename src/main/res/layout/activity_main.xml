@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.owant.drawtreeview.view.SuperTreeView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tree_view"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
+    <com.owant.mindmap.view.TreeView
+        android:id="@+id/tree_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>

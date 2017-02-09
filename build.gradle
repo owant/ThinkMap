@@ -34,4 +34,6 @@ dependencies {
     //全部代替
     compile "com.android.support:appcompat-v7:${supportLibVersion}"
     testCompile 'junit:junit:4.12'
+    compile 'com.nineoldandroids:library:2.4.0'
+
 }

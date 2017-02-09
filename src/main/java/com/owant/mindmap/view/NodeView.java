@@ -1,4 +1,4 @@
-package com.owant.drawtreeview.view;
+package com.owant.mindmap.view;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -6,15 +6,15 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.owant.drawtreeview.R;
-import com.owant.drawtreeview.model.TreeNode;
+import com.owant.mindmap.R;
+import com.owant.mindmap.model.NodeModel;
 
 /**
- * Created by owant on 17/12/2016.
+ * Created by owant on 09/02/2017.
  */
 public class NodeView extends TextView {
 
-    public TreeNode<String> treeNode;
+    public NodeModel<String> treeNode;
 
     public NodeView(Context context) {
         this(context, null, 0);
@@ -34,12 +34,13 @@ public class NodeView extends TextView {
         setBackgroundDrawable(drawable);
     }
 
-    public TreeNode<String> getTreeNode() {
+    public NodeModel<String> getTreeNode() {
         return treeNode;
     }
 
-    public void setTreeNode(TreeNode<String> treeNode) {
+    public void setTreeNode(NodeModel<String> treeNode) {
         this.treeNode = treeNode;
         setText(treeNode.getValue());
     }
+
 }
