@@ -38,7 +38,8 @@ public class TreeView extends ViewGroup {
     private TreeModel<String> mTree;
     private ArrayList<NodeView> mNodesViews;
 
-    private MoveHandler moveHandler;
+    private MoveHandler mMoveHandler;
+    private TreeViewItemClick mTreeViewItemClick;
 
     public TreeView(Context context) {
         this(context, null, 0);
@@ -61,7 +62,7 @@ public class TreeView extends ViewGroup {
         mDx = dp2px(mContext, 26);
         mDy = dp2px(mContext, 22);
 
-        moveHandler = new MoveHandler(this);
+        mMoveHandler = new MoveHandler(this);
     }
 
     public TreeModel<String> getTreeModel() {
@@ -116,7 +117,9 @@ public class TreeView extends ViewGroup {
      * @param view
      */
     private void performTreeItemClick(View view) {
-
+        if (mTreeViewItemClick != null) {
+            mTreeViewItemClick.onItemClick(view);
+        }
     }
 
     /**
@@ -331,7 +334,7 @@ public class TreeView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return moveHandler.move(event);
+        return mMoveHandler.move(event);
     }
 
     private NodeView findTreeNodeView(NodeModel<String> node) {
@@ -410,4 +413,11 @@ public class TreeView extends ViewGroup {
         canvas.drawPath(path, paint);
     }
 
+    public TreeViewItemClick getTreeViewItemClick() {
+        return mTreeViewItemClick;
+    }
+
+    public void setTreeViewItemClick(TreeViewItemClick click) {
+        this.mTreeViewItemClick = click;
+    }
 }
