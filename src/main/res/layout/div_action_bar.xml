@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/action_bar_height"
+                android:background="@color/chelsea_cucumber"
+                android:orientation="vertical"
+                android:theme="@style/AppTheme">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/margin_bottom_left_min"
+        android:text="@string/app_title"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_title"/>
+
+    <ImageView
+        android:id="@+id/action_bar_iv_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="26dp"
+        android:src="@mipmap/search"/>
+
+</RelativeLayout>

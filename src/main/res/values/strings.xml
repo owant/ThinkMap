@@ -1,3 +1,31 @@
 <resources>
-    <string name="app_name">MindMap</string>
+
+    <string name="app_name">ThinkMap</string>
+    <string name="app_project">ThinkMap 让思维更有趣 </string>
+
+    <string name="app_title">Think Map</string>
+    <string name="my_plan">My Plan</string>
+    <string name="add_a_same_floor_node">Add a same floor node.</string>
+    <string name="null_node">null_node</string>
+    <string name="add_a_sub_node">Add a sub node.</string>
+    <string name="edit_node">Edit Node</string>
+    <string name="title_add_sub_node">add SubNode</string>
+    <string name="input_a_new_node">input a new node</string>
+    <string name="enter">Enter</string>
+
+    <!--tab menu-->
+    <string name="tab_sub_node">SubNode</string>
+    <string name="tab_node">Node</string>
+    <string name="tab_front_view">FrontView</string>
+    <string name="tab_code_mode">CodeMode</string>
+    <string name="delete">Delete</string>
+    <string name="cannot_add_node">You can not add a peer node to a root node!</string>
+    <string name="save_file">Save File</string>
+    <string name="no">NO</string>
+    <string name="save">Save</string>
+    <string name="file_destroyed">File has been destroyed,Please delete!</string>
+    <string name="denied_write_storage">You have denied access to WRITE_EXTERNAL_STORAGE!</string>
+    <string name="trans_item">trans_item</string>
+
+
 </resources>

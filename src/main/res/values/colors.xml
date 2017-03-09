@@ -4,7 +4,20 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-
     <color name="chelsea_cucumber">#94B55A</color>
+    <color name="chalet_green">#5E703D</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="hint_of_red">#F9F9F9</color>
+    <color name="fantasy">#F8F2F2</color>
+    <color name="gainsboro">#DDDBDD</color>
+    <color name="athens_gray">#E0DEE0</color>
+
+    <color name="midnight">#22313f</color>
+    <color name="bon_jour">#E4E2E4</color>
+    <color name="charade">#3C3F41</color>
+    <color name="gallery">#EFEFEF</color>
+    <color name="cornell_red">#BB0F23</color>
+    <color name="jaguar">#2B2B2B</color>
 
 </resources>

@@ -2,4 +2,63 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+
+    <!--app-->
+    <dimen name="app_launcher_icon">48dp</dimen>
+    <dimen name="navigation_drawer_width">240dp</dimen>
+
+    <!--action_bar-->
+    <dimen name="action_bar_height">56dp</dimen>
+    <dimen name="action_search_bar">48dp</dimen>
+    <dimen name="action_bar_icon">24dp</dimen>
+
+    <!--action_bar加上状态栏的高-->
+    <dimen name="app_bar">104dp</dimen>
+
+    <!--buttons-->
+    <dimen name="button_normal_height">40dp</dimen>
+    <dimen name="button_floating_big_height">56dp</dimen>
+    <dimen name="button_floating_small_height">40dp</dimen>
+
+    <!--margin-->
+    <dimen name="margin_view_horizontal">16dp</dimen>
+    <dimen name="margin_view_vertical">16dp</dimen>
+    <dimen name="margin_line">1dp</dimen>
+    <dimen name="margin_top_space_small">5dp</dimen>
+    <dimen name="margin_top_space_min">10dp</dimen>
+    <dimen name="margin_top_space_big">15dp</dimen>
+    <dimen name="margin_bottom_space_small">5dp</dimen>
+    <dimen name="margin_bottom_space_min">10dp</dimen>
+    <dimen name="margin_bottom_space_big">15dp</dimen>
+    <dimen name="margin_bottom_right_small">5dp</dimen>
+    <dimen name="margin_bottom_right_min">10dp</dimen>
+    <dimen name="margin_bottom_right_big">15dp</dimen>
+    <dimen name="margin_bottom_left_small">5dp</dimen>
+    <dimen name="margin_bottom_left_min">10dp</dimen>
+    <dimen name="margin_bottom_left_big">15dp</dimen>
+
+    <!--padding-->
+    <dimen name="padding_click_text">10dp</dimen>
+    <dimen name="padding_super_small">1dp</dimen>
+    <dimen name="padding_normal_small">5dp</dimen>
+    <dimen name="padding_normal_min">8dp</dimen>
+    <dimen name="padding_normal_big">15dp</dimen>
+
+
+    <!--text-->
+    <dimen name="text_size_button">14sp</dimen>
+    <dimen name="text_size_menu">14sp</dimen>
+    <dimen name="text_size_iv_tell">12sp</dimen>
+    <dimen name="text_size_body_1">14sp</dimen>
+    <dimen name="text_size_body_2">16sp</dimen>
+    <dimen name="text_size_sub_head">16sp</dimen>
+    <dimen name="text_size_title">20sp</dimen>
+    <dimen name="text_size_head_line">24sp</dimen>
+    <dimen name="text_size_display_1">34sp</dimen>
+    <dimen name="text_size_display_2">45sp</dimen>
+    <dimen name="text_size_display_3">56sp</dimen>
+    <dimen name="text_size_display_4">112sp</dimen>
+
+
 </resources>

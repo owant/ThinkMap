@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_normal_min"
+        tools:background="@color/athens_gray">
+
+        <TextView
+            android:id="@+id/owant_file_root_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/padding_normal_big"
+            android:paddingTop="@dimen/padding_normal_small"
+            android:textColor="@color/jaguar"
+            android:textSize="@dimen/text_size_title"
+            tools:text="我的计划"/>
+
+        <TextView
+            android:id="@+id/owant_file_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/padding_normal_big"
+            android:paddingTop="@dimen/padding_super_small"
+            android:textSize="@dimen/text_size_iv_tell"
+            tools:text="/OwantMaps/android.owant"/>
+
+    </LinearLayout>
+</layout>

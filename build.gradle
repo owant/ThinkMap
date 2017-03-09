@@ -1,29 +1,57 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "24.0.3"
-
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.owant.drawtreeview"
-        minSdkVersion 15
-        targetSdkVersion 23
+        applicationId "com.owant.thinkmap"
+        minSdkVersion 16
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        think_release {
+            applicationId "com.owant.thinkmap"
+        }
+    }
+
+    dataBinding {
+        enabled true
+    }
+
+    lintOptions{
+        abortOnError false
+    }
+
+    //输出文件
+    applicationVariants.all { main ->
+        main.outputs.each { output ->
+            def file = output.outputFile
+            output.outputFile = new File(file.parent, "thinkmap_v_" + main.versionName + "_" + buildTime() + ".apk");
+        }
+    }
+
 }
 
-ext {
-    supportLibVersion = "25.0.1"
+def buildTime() {
+    def df = new SimpleDateFormat("yyyyMMdd")
+    df.setTimeZone(TimeZone.getDefault())
+    return df.format(new Date())
 }
 
 dependencies {
@@ -31,9 +59,11 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    //全部代替
-    compile "com.android.support:appcompat-v7:${supportLibVersion}"
-    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:25.1.1'
     compile 'com.nineoldandroids:library:2.4.0'
 
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+
+    testCompile 'junit:junit:4.12'
 }

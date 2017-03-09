@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:focusable="true"
+                  android:orientation="vertical"
+                  tools:background="@drawable/dialog_edit_input_bg">
+
+        <TextView
+            android:id="@+id/dialog_edit_tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:padding="@dimen/padding_normal_big"
+            android:text=""
+            android:textSize="@dimen/text_size_title"
+            tools:text="@string/title_add_sub_node"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginBottom="@dimen/margin_bottom_space_small"
+            android:layout_marginTop="@dimen/margin_top_space_small"
+            android:background="@color/charade"/>
+
+        <TextView
+            android:id="@+id/dialog_edit_tv_had_same_file"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_bottom_left_min"
+            android:layout_marginRight="@dimen/margin_bottom_right_min"
+            android:padding="@dimen/padding_super_small"
+            android:text="Have the same name file!"
+            android:textColor="@color/athens_gray"
+            android:visibility="invisible"/>
+
+        <RelativeLayout
+            android:id="@+id/dialog_edit_check_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_bottom_left_min"
+            android:layout_marginRight="@dimen/margin_bottom_right_min">
+
+            <EditText
+                android:id="@+id/dialog_edit_et_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_bg"
+                android:gravity="top"
+                android:hint="@string/input_a_new_node"
+                android:inputType="textMultiLine"
+                android:maxLength="30"
+                android:maxLines="2"
+                android:padding="@dimen/padding_normal_big"
+                android:scrollHorizontally="false"
+                android:textSize="@dimen/text_size_menu"
+                tools:text="创建一个BaseActivity,进行模板设计,之后基于模板进行设计,这
+        是核心的模板方法模式,它具有固定的算法结构.使用起来结构清晰,而且利于阅读。"/>
+
+            <ImageView
+                android:id="@+id/dialog_edit_iv_input_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin_bottom_right_big"
+                android:src="@mipmap/clear_input"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/dialog_btn_delete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_bottom_space_min"
+                android:layout_marginLeft="@dimen/margin_bottom_left_min"
+                android:layout_marginRight="@dimen/margin_bottom_right_min"
+                android:layout_marginTop="@dimen/margin_top_space_big"
+                android:layout_weight="1"
+                android:background="@drawable/enter_bg"
+                android:padding="@dimen/padding_normal_big"
+                android:text="@string/delete"
+                android:textAllCaps="false"
+                android:textColor="@color/athens_gray"/>
+
+            <Button
+                android:id="@+id/dialog_btn_enter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_bottom_space_min"
+                android:layout_marginLeft="@dimen/margin_bottom_left_min"
+                android:layout_marginRight="@dimen/margin_bottom_right_min"
+                android:layout_marginTop="@dimen/margin_top_space_big"
+                android:layout_weight="1"
+                android:background="@drawable/enter_bg"
+                android:padding="@dimen/padding_normal_big"
+                android:text="@string/enter"
+                android:textAllCaps="false"
+                android:textColor="@color/athens_gray"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>
