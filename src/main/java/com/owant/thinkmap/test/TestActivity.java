@@ -64,6 +64,20 @@ public class TestActivity extends BaseActivity {
         final TreeModel<String> tree = new TreeModel<>(nodeA);
         tree.addNode(nodeA, nodeB, nodeC, nodeD);
         tree.addNode(nodeC, nodeE, nodeF, nodeG, nodeH, nodeI);
+
+//
+//        tree.addNode(nodeE, nodeJ);
+//        tree.addNode(nodeJ, nodeK);
+//        tree.addNode(nodeK, nodeL);
+//        tree.addNode(nodeL, nodeM);
+//        tree.addNode(nodeM, nodeN);
+//        tree.addNode(nodeN, nodeO);
+//        tree.addNode(nodeO, nodeP);
+//        tree.addNode(nodeP, nodeQ);
+//        tree.addNode(nodeQ, nodeR);
+//        tree.addNode(nodeR, nodeS);
+//        tree.addNode(nodeS, nodeT);
+
         tree.addNode(nodeB, nodeJ, nodeK, nodeL);
         tree.addNode(nodeD, nodeM, nodeN, nodeO);
         tree.addNode(nodeF, nodeP, nodeQ, nodeR, nodeS);
@@ -79,7 +93,7 @@ public class TestActivity extends BaseActivity {
         binding.testTreeView.setTreeViewItemClick(new TreeViewItemClick() {
             @Override
             public void onItemClick(View item) {
-
+                binding.testTreeView.focusMidLocation();
             }
         });
 

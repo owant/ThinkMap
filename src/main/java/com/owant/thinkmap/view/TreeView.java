@@ -95,8 +95,8 @@ public class TreeView extends ViewGroup {
 
             int w = mWidth > box.right ? mWidth : box.right;
             int temTop = box.top < 0 ? -box.top : 0;
-            int temBottom = box.bottom > mHeight ? box.bottom : 0;
-            int h = temTop + temBottom;
+            int temBottom = box.bottom > mHeight ? box.bottom - mHeight : 0;
+            int h = temTop + temBottom + mHeight;
 
             //重置View的大小
             this.setLayoutParams(new FrameLayout.LayoutParams(w, h));
@@ -245,13 +245,16 @@ public class TreeView extends ViewGroup {
             ViewHelper.setTranslationX(this, 0);
             ViewHelper.setTranslationY(this, 0);
 
+            View view = findNodeViewFromNodeModel(mTreeModel.getRootNode());
             //回到原点后的中点
-            int pointY = getHeight() / 2;
-            int pointX = DensityUtils.dp2px(mContext, 20);
+            int pointY = (int) view.getY() + view.getMeasuredHeight() / 2;
 
-            //移动到中点
-            ViewHelper.setTranslationX(this, focusX - pointX);
-            ViewHelper.setTranslationY(this, focusY - pointY);
+            if (pointY >= focusY) {
+                pointY = -(pointY - focusY);
+            } else {
+                pointY = focusY - pointY;
+            }
+            ViewHelper.setTranslationY(this, pointY);
         }
     }
 
