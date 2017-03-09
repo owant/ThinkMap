@@ -5,14 +5,20 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 
+import com.nineoldandroids.view.ViewHelper;
 import com.owant.thinkmap.R;
 import com.owant.thinkmap.control.MoveHandler;
 import com.owant.thinkmap.model.NodeModel;
 import com.owant.thinkmap.model.TreeModel;
+import com.owant.thinkmap.util.DensityUtils;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -26,6 +32,8 @@ import static com.owant.thinkmap.util.DensityUtils.dp2px;
 
 public class TreeView extends ViewGroup {
 
+    private static final String TAG = "TreeView";
+
     private Context mContext;
 
     public TreeModel<String> mTreeModel;
@@ -33,6 +41,16 @@ public class TreeView extends ViewGroup {
 
     //移动控制
     private MoveHandler mMoveHandler;
+
+    //点击事件
+    private TreeViewItemClick mTreeViewItemClick;
+    private TreeViewItemLongClick mTreeViewItemLongClick;
+    //最近点击的item
+    private NodeModel<String> mCurrentFocus;
+
+    private int mWidth;
+    private int mHeight;
+
 
     public TreeView(Context context) {
         this(context, null, 0);
@@ -59,6 +77,10 @@ public class TreeView extends ViewGroup {
             measureChild(getChildAt(i), widthMeasureSpec, heightMeasureSpec);
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        mWidth = getMeasuredWidth();
+        mHeight = getMeasuredHeight();
+
     }
 
     @Override
@@ -68,8 +90,49 @@ public class TreeView extends ViewGroup {
             //树形结构的分布
             mTreeLayoutManager.onTreeLayout(this);
 
-            //TODO 进行大小的控制
             ViewBox box = mTreeLayoutManager.onTreeLayoutCallBack();
+            Log.i("box", box.toString());
+
+            int w = mWidth > box.right ? mWidth : box.right;
+            int temTop = box.top < 0 ? -box.top : 0;
+            int temBottom = box.bottom > mHeight ? box.bottom : 0;
+            int h = temTop + temBottom;
+
+            //重置View的大小
+            this.setLayoutParams(new FrameLayout.LayoutParams(w, h));
+            int measuredHeight = getMeasuredHeight();
+            int measuredWidth = getMeasuredWidth();
+            Log.i(TAG, "onLayout: " + measuredHeight + "," + measuredWidth);
+
+            //移动节点
+            moveNodeLayout(this, (NodeView) findNodeViewFromNodeModel(getTreeModel().getRootNode()), temTop);
+
+            focusMidLocation();
+        }
+    }
+
+    /**
+     * 移动
+     *
+     * @param rootView
+     * @param dy
+     */
+    private void moveNodeLayout(TreeView superTreeView, NodeView rootView, int dy) {
+
+        Deque<NodeModel<String>> queue = new ArrayDeque<>();
+        NodeModel<String> rootNode = rootView.getTreeNode();
+        queue.add(rootNode);
+        while (!queue.isEmpty()) {
+            rootNode = queue.poll();
+            rootView = (NodeView) superTreeView.findNodeViewFromNodeModel(rootNode);
+            int l = rootView.getLeft();
+            int t = rootView.getTop() + dy;
+            rootView.layout(l, t, l + rootView.getMeasuredWidth(), t + rootView.getMeasuredHeight());
+
+            LinkedList<NodeModel<String>> childNodes = rootNode.getChildNodes();
+            for (NodeModel<String> item : childNodes) {
+                queue.add(item);
+            }
         }
     }
 
@@ -95,6 +158,7 @@ public class TreeView extends ViewGroup {
 
                 //连线
                 drawLineToView(canvas, fatherView, findNodeViewFromNodeModel(node));
+
                 //递归
                 drawTreeLine(canvas, node);
             }
@@ -153,6 +217,42 @@ public class TreeView extends ViewGroup {
         clearAllNoteViews();
 
         addNoteViews();
+
+        setCurrentSelectedNode(mTreeModel.getRootNode());
+
+        this.post(new Runnable() {
+            @Override
+            public void run() {
+//                focusMidLocation();
+            }
+        });
+    }
+
+    /**
+     * 中点对焦
+     */
+    public void focusMidLocation() {
+        if (mTreeModel != null) {
+
+            //计算屏幕中点
+            WindowManager systemService = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+            Display defaultDisplay = systemService.getDefaultDisplay();
+            int displayH = defaultDisplay.getHeight();
+            int focusX = DensityUtils.dp2px(mContext, 20);
+            int focusY = displayH / 2;
+
+            //回到原点(0,0)
+            ViewHelper.setTranslationX(this, 0);
+            ViewHelper.setTranslationY(this, 0);
+
+            //回到原点后的中点
+            int pointY = getHeight() / 2;
+            int pointX = DensityUtils.dp2px(mContext, 20);
+
+            //移动到中点
+            ViewHelper.setTranslationX(this, focusX - pointX);
+            ViewHelper.setTranslationY(this, focusY - pointY);
+        }
     }
 
     /**
@@ -204,19 +304,54 @@ public class TreeView extends ViewGroup {
         nodeView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                // performTreeItemClick(view);
+                performTreeItemClick(view);
             }
         });
         nodeView.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                // preformTreeItemLongClick(v);
+                preformTreeItemLongClick(v);
                 return true;
             }
         });
 
         this.addView(nodeView);
 
+    }
+
+    public void setTreeViewItemClick(TreeViewItemClick treeViewItemClick) {
+        mTreeViewItemClick = treeViewItemClick;
+    }
+
+    public void setTreeViewItemLongClick(TreeViewItemLongClick treeViewItemLongClick) {
+        mTreeViewItemLongClick = treeViewItemLongClick;
+    }
+
+    private void preformTreeItemLongClick(View v) {
+        if (mTreeViewItemLongClick != null) {
+            mTreeViewItemLongClick.onLongClick(v);
+        }
+    }
+
+    private void performTreeItemClick(View view) {
+        if (mTreeViewItemClick != null) {
+            setCurrentSelectedNode(((NodeView) view).getTreeNode());
+            mTreeViewItemClick.onItemClick(view);
+        }
+    }
+
+    public void setCurrentSelectedNode(NodeModel<String> nodeModel) {
+        if (mCurrentFocus != null) {
+            mCurrentFocus.setFocus(false);
+            NodeView treeNodeView = (NodeView) findNodeViewFromNodeModel(mCurrentFocus);
+            if (treeNodeView != null) {
+                treeNodeView.setSelected(false);
+            }
+        }
+
+        nodeModel.setFocus(true);
+        findNodeViewFromNodeModel(nodeModel).setSelected(true);
+        mCurrentFocus = nodeModel;
     }
 
     /**
@@ -229,7 +364,7 @@ public class TreeView extends ViewGroup {
     }
 
     /**
-     * 同步模型查找NodeView
+     * 模型查找NodeView
      *
      * @param nodeModel
      * @return

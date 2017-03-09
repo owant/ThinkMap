@@ -15,19 +15,19 @@ import java.util.LinkedList;
 /**
  * Created by owant on 08/03/2017.
  */
-
 public class RightTreeLayoutManager implements TreeLayoutManager {
 
     final int msg_standard_layout = 1;
     final int msg_correct_layout = 2;
+    final int msg_box_call_back = 3;
 
     private ViewBox mViewBox;
     private int mDy;
     private int mDx;
     private int mHeight;
 
-    public RightTreeLayoutManager(int dx, int dy, int height, ViewBox viewBox) {
-        mViewBox = viewBox;
+    public RightTreeLayoutManager(int dx, int dy, int height) {
+        mViewBox = new ViewBox();
 
         this.mDx = dx;
         this.mDy = dy;
@@ -57,6 +57,18 @@ public class RightTreeLayoutManager implements TreeLayoutManager {
 
             //纠正
             mTreeModel.ergodicTreeInWith(msg_correct_layout);
+
+            mTreeModel.ergodicTreeInDeep(msg_box_call_back);
+
+        }
+    }
+
+    @Override
+    public ViewBox onTreeLayoutCallBack() {
+        if (mViewBox != null) {
+            return mViewBox;
+        } else {
+            return null;
         }
     }
 
@@ -69,6 +81,35 @@ public class RightTreeLayoutManager implements TreeLayoutManager {
         } else if (msg == msg_correct_layout) {//纠正
 
             correctLayout(treeView, (NodeView) view);
+        } else if (msg == msg_box_call_back) {
+
+            int left = view.getLeft();
+            int top = view.getTop();
+            int right = view.getRight();
+            int bottom = view.getBottom();
+
+
+            //     *******
+            //     *     *
+            //     *     *
+            //     *******
+
+            if (left < mViewBox.left) {
+                mViewBox.left = left;
+            }
+
+            if (top < mViewBox.top) {
+                mViewBox.top = top;
+            }
+
+            if (right > mViewBox.right) {
+                mViewBox.right = right;
+            }
+
+            if (bottom > mViewBox.bottom) {
+                mViewBox.bottom = bottom;
+            }
+
         }
     }
 
@@ -237,14 +278,6 @@ public class RightTreeLayoutManager implements TreeLayoutManager {
         }
     }
 
-    @Override
-    public ViewBox onTreeLayoutCallBack() {
-        if (mViewBox != null) {
-            return mViewBox;
-        } else {
-            return null;
-        }
-    }
 
     /**
      * root节点的定位

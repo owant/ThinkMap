@@ -2,6 +2,7 @@ package com.owant.thinkmap.test;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.view.View;
 
 import com.owant.thinkmap.R;
 import com.owant.thinkmap.databinding.ActivityTestBinding;
@@ -10,6 +11,8 @@ import com.owant.thinkmap.model.NodeModel;
 import com.owant.thinkmap.model.TreeModel;
 import com.owant.thinkmap.util.DensityUtils;
 import com.owant.thinkmap.view.RightTreeLayoutManager;
+import com.owant.thinkmap.view.TreeViewItemClick;
+import com.owant.thinkmap.view.TreeViewItemLongClick;
 import com.owant.thinkmap.view.ViewBox;
 
 /**
@@ -70,10 +73,22 @@ public class TestActivity extends BaseActivity {
         int dx = DensityUtils.dp2px(this, 20);
         int dy = DensityUtils.dp2px(this, 20);
         int mHeight = DensityUtils.dp2px(this, 720);
-        ViewBox box = new ViewBox();
 
-        binding.testTreeView.setTreeLayoutManager(new RightTreeLayoutManager(dx, dy, mHeight, box));
+        binding.testTreeView.setTreeLayoutManager(new RightTreeLayoutManager(dx, dy, mHeight));
         binding.testTreeView.setTreeModel(tree);
+        binding.testTreeView.setTreeViewItemClick(new TreeViewItemClick() {
+            @Override
+            public void onItemClick(View item) {
+
+            }
+        });
+
+        binding.testTreeView.setTreeViewItemLongClick(new TreeViewItemLongClick() {
+            @Override
+            public void onLongClick(View view) {
+
+            }
+        });
 
     }
 }

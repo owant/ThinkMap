@@ -9,4 +9,14 @@ public class ViewBox {
     public int top;
     public int right;
     public int bottom;
+
+    @Override
+    public String toString() {
+        return "ViewBox{" +
+                "left=" + left +
+                ", top=" + top +
+                ", right=" + right +
+                ", bottom=" + bottom +
+                '}';
+    }
 }
