@@ -14,4 +14,13 @@ public interface TreeLayoutManager {
      * 位置分布好后的回调,用于确认ViewGroup的大小
      */
     ViewBox onTreeLayoutCallBack();
+
+    /**
+     * 修正位置
+     *
+     * @param treeView
+     * @param next
+     */
+    void correctLayout(TreeView treeView, NodeView next);
+
 }

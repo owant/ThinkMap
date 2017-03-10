@@ -58,6 +58,7 @@ public class RightTreeLayoutManager implements TreeLayoutManager {
             //纠正
             mTreeModel.ergodicTreeInWith(msg_correct_layout);
 
+            mViewBox.clear();
             mTreeModel.ergodicTreeInDeep(msg_box_call_back);
 
         }
@@ -83,10 +84,11 @@ public class RightTreeLayoutManager implements TreeLayoutManager {
             correctLayout(treeView, (NodeView) view);
         } else if (msg == msg_box_call_back) {
 
+
             int left = view.getLeft();
             int top = view.getTop();
-            int right = view.getRight();
             int bottom = view.getBottom();
+            int right = view.getRight();
 
 
             //     *******
@@ -97,19 +99,15 @@ public class RightTreeLayoutManager implements TreeLayoutManager {
             if (left < mViewBox.left) {
                 mViewBox.left = left;
             }
-
             if (top < mViewBox.top) {
                 mViewBox.top = top;
             }
-
-            if (right > mViewBox.right) {
-                mViewBox.right = right;
-            }
-
             if (bottom > mViewBox.bottom) {
                 mViewBox.bottom = bottom;
             }
-
+            if (right > mViewBox.right) {
+                mViewBox.right = right;
+            }
         }
     }
 
@@ -119,7 +117,7 @@ public class RightTreeLayoutManager implements TreeLayoutManager {
      * @param treeView
      * @param next
      */
-    private void correctLayout(TreeView treeView, NodeView next) {
+    public void correctLayout(TreeView treeView, NodeView next) {
         TreeModel mTree = treeView.getTreeModel();
 
         int count = next.getTreeNode().getChildNodes().size();
@@ -265,7 +263,7 @@ public class RightTreeLayoutManager implements TreeLayoutManager {
         NodeModel<String> rootNode = rootView.getTreeNode();
         queue.add(rootNode);
         while (!queue.isEmpty()) {
-            rootNode = (NodeModel<String>) queue.poll();
+            rootNode = queue.poll();
             rootView = (NodeView) superTreeView.findNodeViewFromNodeModel(rootNode);
             int l = rootView.getLeft();
             int t = rootView.getTop() + dy;

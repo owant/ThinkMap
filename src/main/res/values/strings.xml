@@ -27,5 +27,8 @@
     <string name="denied_write_storage">You have denied access to WRITE_EXTERNAL_STORAGE!</string>
     <string name="trans_item">trans_item</string>
 
+    <string name="defualt_my_plan">MyPlan</string>
+    <string name="unkown_error">unknow error!</string>
+
 
 </resources>

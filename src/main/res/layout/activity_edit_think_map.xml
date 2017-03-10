@@ -11,14 +11,12 @@
 
         <com.owant.thinkmap.view.TreeView
             android:id="@+id/edit_map_tree_view"
-            android:layout_width="2000dp"
-            android:layout_height="3000dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <include
-            layout="@layout/edit_menu_tool_bar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/action_bar_height"
-            android:layout_alignParentBottom="true"/>
+            android:id="@+id/edit_menu"
+            layout="@layout/div_edit_menu"/>
 
     </FrameLayout>
 

@@ -54,6 +54,7 @@
                 android:inputType="textMultiLine"
                 android:maxLength="30"
                 android:maxLines="2"
+                android:textColor="@color/jaguar"
                 android:padding="@dimen/padding_normal_big"
                 android:scrollHorizontally="false"
                 android:textSize="@dimen/text_size_menu"
@@ -108,6 +109,6 @@
 
         </LinearLayout>
 
-
     </LinearLayout>
+
 </layout>

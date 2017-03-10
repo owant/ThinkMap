@@ -18,13 +18,14 @@ import java.util.ArrayList;
 
 public class BindViewTool {
 
-//    static String path = "/Users/owant/AndroidStudioProjects/ThinkMap/app/src/main/res/layout/edit_menu_tool_bar.xml";
-
-    static String path = "/Users/owant/AndroidStudioProjects/ThinkMap/app/src/main/res/layout/dialog_edit_input.xml";
-
+//    static String path = "/Users/owant/AndroidStudioProjects/ThinkMap3/app/src/main/res/layout/activity_edit_think_map.xml";
 
     public static void main(String[] arg) {
-        bindView(path);
+//    	System.out.println("GOGO");
+        if (arg.length > 0) {
+            bindView(arg[0], false);
+            printfResult();
+        }
     }
 
     /**
@@ -40,32 +41,33 @@ public class BindViewTool {
 
     private static boolean isFragment = false;
     /**
-     * 忽略的标识
+     * 忽略的标识,默认表示为_
      */
-    private static String ignoreMark = "";
+    private static String ignoreMark = "_";
 
     //找到了需要绑定的View
     private static ArrayList<Model> bindViews;
 
-    public static void bindView(String xmlPath) {
+    public static void bindView(String xmlPath, boolean includeState) {
         try {
 
             InputStream inputStream = new FileInputStream(new File(xmlPath));
 
             //bindView的集合
-            bindViews = new ArrayList<>();
+            if (!includeState)
+                bindViews = new ArrayList<>();
 
             XmlPullParser xmlPullParser = XmlPullParserFactory.newInstance().newPullParser();
             xmlPullParser.setInput(inputStream, "utf-8");
 
-            //xmlpullparser是以事件触发为设计的代码
+            //xml pull parser是以事件触发为设计的代码
             int eventType = xmlPullParser.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {//文档结束
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT://文档开始
                         break;
                     case XmlPullParser.START_TAG://标签开始
-                        xmlTagBusiness(xmlPullParser);
+                        xmlTagBusiness(xmlPath, xmlPullParser);
                         break;
                     case XmlPullParser.END_TAG://标签结束
                         break;
@@ -73,8 +75,6 @@ public class BindViewTool {
 
                 eventType = xmlPullParser.next();
             }
-
-            printfResult();
 
         } catch (XmlPullParserException e) {
             e.printStackTrace();
@@ -88,16 +88,20 @@ public class BindViewTool {
 
     private static void printfResult() {
         //打印需要BindView的控件
+        //打印变量声明
+        System.out.println("\n\n");
         for (Model m : bindViews) {
             String declare = declare_format.replace("{0}", m.mType);
-            declare = declare.replace("{1}", m.mId);
+            declare = declare.replace("{1}", m.mName);
             System.out.println(declare);
         }
 
         System.out.println("\n\n");
 
+        System.out.println("public void bindViews(){\n");
+
         for (Model m : bindViews) {
-            String find = find_view_format.replace("{0}", m.mId);
+            String find = find_view_format.replace("{0}", m.mName);
             find = find.replace("{1}", m.mType);
             if (isFragment) {
                 find = find.replace("{2}", "getView().");
@@ -105,11 +109,12 @@ public class BindViewTool {
                 find = find.replace("{2}", "");
             }
             find = find.replace("{3}", "R.id." + m.mId);
-            System.out.println(find);
+            System.out.println("\t" + find);
         }
+        System.out.println("}\n");
     }
 
-    private static void xmlTagBusiness(XmlPullParser xmlPullParser) {
+    private static void xmlTagBusiness(String path, XmlPullParser xmlPullParser) {
         //对于这个情况需要进行com.owant.example.view.DivView
         String type = xmlPullParser.getName();
         int pointExist = type.lastIndexOf(".");
@@ -117,31 +122,89 @@ public class BindViewTool {
             type = type.substring(pointExist + 1, type.length());
         }
 
+        if (type.equals("include")) {
+
+            /**
+             <include
+             android:id="@+id/edit_menu"
+             layout="@layout/div_edit_menu"/>
+             */
+            int count = xmlPullParser.getAttributeCount();
+            for (int i = 0; i < count; i++) {
+                if (xmlPullParser.getAttributeName(i).startsWith("layout")) {
+                    //查找到另一个布局
+                    String layoutFormat = xmlPullParser.getAttributeValue(i);
+                    layoutFormat = layoutFormat.substring(layoutFormat.indexOf("/"), layoutFormat.length());
+
+                    bindView(path.substring(0, path.lastIndexOf("/")) + layoutFormat + ".xml", true);
+                    return;
+                }
+            }
+
+        }
+
         String androidIdValue = null;
         int count = xmlPullParser.getAttributeCount();
         for (int i = 0; i < count; i++) {
             String androidIdTag = xmlPullParser.getAttributeName(i);
+
             if (androidIdTag.equals("android:id")) {
                 String androidIdTagValue = xmlPullParser.getAttributeValue(i);
                 if (androidIdTagValue.startsWith("@+id/")) {
                     androidIdValue = androidIdTagValue.replace("@+id/", "");
+                    //ignore
+                    if (androidIdValue.startsWith("_")) {
+                        androidIdValue = "";
+                    }
 
-                    //TODO ignore
+                    if (androidIdValue != null) {
+                        Model model = new Model();
+                        model.mId = androidIdValue;
+                        String name = translationName(model.mId);
+                        model.mName = name;
+                        model.mType = type;
+                        bindViews.add(model);
+                    }
+                    continue;
                 }
             }
         }
+    }
 
-        if (androidIdValue != null) {
-            Model model = new Model();
-            model.mId = androidIdValue;
-            model.mType = type;
-            bindViews.add(model);
+    /**
+     * edit_map_tree_view转化为editMapTreeView
+     *
+     * @param idValue
+     * @return
+     */
+    private static String translationName(String idValue) {
+        boolean shouldUp = false;
+        char[] chars = idValue.toCharArray();
+        StringBuffer buffer = new StringBuffer();
+        for (char ch : chars) {
+
+            if (shouldUp) {
+                ch = Character.toUpperCase(ch);
+                buffer.append(ch);
+                shouldUp = false;
+
+            } else {
+                if (ch == '_') {
+                    shouldUp = true;
+                } else {
+                    shouldUp = false;
+                    buffer.append(ch);
+                }
+            }
         }
+        return buffer.toString();
     }
 
     public static class Model {
         public String mType;
+        public String mName;
         public String mId;
     }
-
 }
+
+

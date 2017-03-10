@@ -17,7 +17,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         onBasePreLayout();
 
-        onBaseBindView(savedInstanceState);
+        setContentView(onBaseLayoutId());
+
+        onBaseBindView();
     }
 
     /**
@@ -32,6 +34,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onBasePreLayout() {
     }
 
-    public abstract void onBaseBindView(Bundle savedInstanceState);
+    /**
+     * 返回布局文件
+     *
+     * @return id
+     */
+    public abstract int onBaseLayoutId();
+
+    public abstract void onBaseBindView();
 
 }
