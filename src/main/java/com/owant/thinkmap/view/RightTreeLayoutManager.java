@@ -7,6 +7,7 @@ import com.owant.thinkmap.model.ForTreeItem;
 import com.owant.thinkmap.model.NodeModel;
 import com.owant.thinkmap.model.TreeModel;
 
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -15,7 +16,7 @@ import java.util.LinkedList;
 /**
  * Created by owant on 08/03/2017.
  */
-public class RightTreeLayoutManager implements TreeLayoutManager {
+public class RightTreeLayoutManager implements TreeLayoutManager{
 
     final int msg_standard_layout = 1;
     final int msg_correct_layout = 2;

@@ -16,10 +16,8 @@
 
 package com.owant.thinkmap.base;
 
-public interface BasePresenter {
+public interface BaseView<T> {
 
-    void start();
-
-    void onRecycle();
+    void setPresenter(T presenter);
 
 }

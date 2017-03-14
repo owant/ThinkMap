@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * Created by owant on 24/02/2017.
  */
-
 public class EditAlertDialog extends BaseAlertDialog {
 
     private TextView dialog_edit_tv_title;

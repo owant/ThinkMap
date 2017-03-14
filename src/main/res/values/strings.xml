@@ -29,6 +29,7 @@
 
     <string name="defualt_my_plan">MyPlan</string>
     <string name="unkown_error">unknow error!</string>
+    <string name="denied_read_storage">you denied read storage permission!</string>
 
 
 </resources>

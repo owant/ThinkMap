@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -19,8 +18,10 @@ public class TreeModel<T> implements Serializable {
      */
     public NodeModel<T> rootNode;
 
-    public ForTreeItem<NodeModel<T>> mForTreeItem;
-
+    /**
+     * 模型里的接口是不用序列号的
+     */
+    public transient ForTreeItem<NodeModel<T>> mForTreeItem;
 
     public TreeModel(NodeModel<T> rootNode) {
         this.rootNode = rootNode;
