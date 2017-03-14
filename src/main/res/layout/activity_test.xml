@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
-    <FrameLayout
+    <com.owant.thinkmap.view.TreeView
+        android:id="@+id/test_tree_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipChildren="false"
-        android:clipToPadding="false">
+        android:background="@color/bon_jour">
+    </com.owant.thinkmap.view.TreeView>
 
-        <com.owant.thinkmap.view.TreeView
-            android:background="@color/bon_jour"
-            android:id="@+id/test_tree_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </com.owant.thinkmap.view.TreeView>
-
-    </FrameLayout>
-
-</layout>
+</FrameLayout>

@@ -2,9 +2,8 @@ package com.owant.thinkmap.ui.editmap;
 
 import com.owant.thinkmap.base.BasePresenter;
 import com.owant.thinkmap.base.BaseView;
+import com.owant.thinkmap.model.NodeModel;
 import com.owant.thinkmap.model.TreeModel;
-
-import java.io.Serializable;
 
 /**
  * Created by owant on 13/03/2017.
@@ -25,6 +24,8 @@ public interface EditMapContract {
         void reSetTreeData(Object treeObject);
 
         TreeModel<String> getTreeModel();
+
+        void changeNode(NodeModel<String> node);
     }
 
     /**
@@ -60,8 +61,10 @@ public interface EditMapContract {
         /**
          * 修改节点的数据
          *
-         * @param view
+         * @param nodeModel
          */
-        void showEditNote(View view);
+        void showEditNote(NodeModel<String> nodeModel);
+
+        String getDefualtPlanString();
     }
 }

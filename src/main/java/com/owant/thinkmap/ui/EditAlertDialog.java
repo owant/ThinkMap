@@ -45,11 +45,11 @@ public class EditAlertDialog extends BaseAlertDialog {
     private List<String> checkLists;
 
 
-    protected EditAlertDialog(@NonNull Context context) {
+    public EditAlertDialog(@NonNull Context context) {
         super(context);
     }
 
-    protected EditAlertDialog(@NonNull Context context, @StyleRes int themeResId) {
+    public EditAlertDialog(@NonNull Context context, @StyleRes int themeResId) {
         super(context, themeResId);
     }
 
@@ -179,6 +179,10 @@ public class EditAlertDialog extends BaseAlertDialog {
 
     public void addDeleteCallBack(DeleteCallBack callBack) {
         deleteCallBack = callBack;
+    }
+
+    public void clearInput() {
+        setInput("");
     }
 
     public interface EnterCallBack {

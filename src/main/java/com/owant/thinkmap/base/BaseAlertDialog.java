@@ -43,4 +43,5 @@ public abstract class BaseAlertDialog extends AlertDialog {
     protected abstract void onBaseBindView();
 
 
+
 }

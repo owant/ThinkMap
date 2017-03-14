@@ -15,3 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keep class com.owant.thinkmap.model.*{*;}
+-keep public class * extends com.owant.thinkmap.model.NodeModel
+-keep public class * extends com.owant.thinkmap.model.TreeModel

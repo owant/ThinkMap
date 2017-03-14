@@ -52,7 +52,6 @@ public class TreeView extends ViewGroup {
     private int mWidth;
     private int mHeight;
 
-
     public TreeView(Context context) {
         this(context, null, 0);
     }
@@ -341,14 +340,15 @@ public class TreeView extends ViewGroup {
     }
 
     private void preformTreeItemLongClick(View v) {
+        setCurrentSelectedNode(((NodeView) v).getTreeNode());
         if (mTreeViewItemLongClick != null) {
             mTreeViewItemLongClick.onLongClick(v);
         }
     }
 
     private void performTreeItemClick(View view) {
+        setCurrentSelectedNode(((NodeView) view).getTreeNode());
         if (mTreeViewItemClick != null) {
-            setCurrentSelectedNode(((NodeView) view).getTreeNode());
             mTreeViewItemClick.onItemClick(view);
         }
     }
@@ -420,6 +420,7 @@ public class TreeView extends ViewGroup {
         NodeModel<String> parentNode = getCurrentFocusNode().getParentNode();
         if (parentNode != null) {
             mTreeModel.addNode(parentNode, addNode);
+            Log.i(TAG, "addNode: true");
             addNodeViewToGroup(addNode);
         }
     }

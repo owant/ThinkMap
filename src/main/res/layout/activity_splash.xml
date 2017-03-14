@@ -1,41 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <ImageView
+        android:id="@+id/iv_introduce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/introduce"/>
 
-        <ImageView
-            android:id="@+id/iv_introduce"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/introduce"/>
+    <TextView
+        android:id="@+id/tv_app_tell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_introduce"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_bottom_space_big"
+        android:text="@string/app_project"
+        android:textColor="@color/chelsea_cucumber"
+        android:textSize="@dimen/text_size_iv_tell"/>
 
-        <TextView
-            android:id="@+id/tv_app_tell"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_introduce"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/margin_bottom_space_big"
-            android:text="@string/app_project"
-            android:textColor="@color/chelsea_cucumber"
-            android:textSize="@dimen/text_size_iv_tell"/>
+    <TextView
+        android:id="@+id/tv_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_app_tell"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_bottom_space_small"
+        android:textColor="@color/gainsboro"
+        android:textSize="@dimen/text_size_iv_tell"
+        tools:text="v1.0.1"/>
 
-        <TextView
-            android:id="@+id/tv_version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_app_tell"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/margin_bottom_space_small"
-            android:textColor="@color/gainsboro"
-            android:textSize="@dimen/text_size_iv_tell"
-            tools:text="v1.0.1"/>
-
-    </RelativeLayout>
-</layout>
+</RelativeLayout>

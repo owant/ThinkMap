@@ -16,10 +16,11 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -28,10 +29,6 @@ android {
         think_release {
             applicationId "com.owant.thinkmap4"
         }
-    }
-
-    dataBinding {
-        enabled true
     }
 
     lintOptions{
