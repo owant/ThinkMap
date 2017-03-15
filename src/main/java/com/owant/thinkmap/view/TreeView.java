@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -464,4 +465,5 @@ public class TreeView extends ViewGroup {
     public TreeLayoutManager getTreeLayoutManager() {
         return mTreeLayoutManager;
     }
+    
 }

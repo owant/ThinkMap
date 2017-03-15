@@ -62,13 +62,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/think_release/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/think_release/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/think_release/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testThink_release/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testThink_release/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testThink_release/assets" type="java-test-resource" />
@@ -76,6 +69,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/testThink_release/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testThink_release/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testThink_release/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestThink_release/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" type="java-resource" />
@@ -114,11 +114,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/builds" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/bundles" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/data-binding-compiler" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/data-binding-info" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/data-binding-layout-out" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-runtime-classes" />
