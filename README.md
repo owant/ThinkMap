@@ -1,14 +1,12 @@
-##draw a tree in android
-
+###draw a tree in android,ThinkMap
 <image src="./info2.png"/>
 
 ###how to use this project
-
 this project is a module of AndroidStudio. you can capy the module
  in the Project Space,and add the code 'include "/treeview"/' of the 'settings.gradle', and 'Sync Now' Project.
 
 ###The Simple code
-
+follwing the simple code, you can build a tree.
 ```java
 
         final NodeModel<String> nodeA = new NodeModel<>("A");
@@ -57,3 +55,5 @@ this project is a module of AndroidStudio. you can capy the module
         binding.testTreeView.setTreeModel(tree);
 
 ```
+
+
