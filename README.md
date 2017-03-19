@@ -1,6 +1,8 @@
 ##draw a tree in android
+
 <image src="./info2.png"/>
 ###how to use this project
+
 this project is a module of AndroidStudio. you can capy the module
  in the Project Space,and add the code 'include "/treeview"/' of the 'settings.gradle', and 'Sync Now' Project.
 
@@ -48,9 +50,9 @@ this project is a module of AndroidStudio. you can capy the module
         int dx = DensityUtils.dp2px(this, 20);
         int dy = DensityUtils.dp2px(this, 20);
         int mHeight = DensityUtils.dp2px(this, 720);
-        ViewBox box = new ViewBox();
+      
 
-        binding.testTreeView.setTreeLayoutManager(new RightTreeLayoutManager(dx, dy, mHeight, box));
+        binding.testTreeView.setTreeLayoutManager(new RightTreeLayoutManager(dx, dy, mHeight));
         binding.testTreeView.setTreeModel(tree);
 
 ```
