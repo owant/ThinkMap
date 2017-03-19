@@ -51,6 +51,10 @@ this project is a module of AndroidStudio. you can capy the module
         int dx = DensityUtils.dp2px(this, 20);
         int dy = DensityUtils.dp2px(this, 20);
         int mHeight = DensityUtils.dp2px(this, 720);
+<<<<<<< HEAD
+=======
+      
+>>>>>>> 2c5047c92e46af63cf0360edfcf88e4dc0969bf4
 
         binding.testTreeView.setTreeLayoutManager(new RightTreeLayoutManager(dx, dy, mHeight));
         binding.testTreeView.setTreeModel(tree);
