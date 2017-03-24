@@ -60,5 +60,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
-
+    compile 'com.android.support:cardview-v7:25.2.0'
 }

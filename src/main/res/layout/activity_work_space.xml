@@ -7,21 +7,26 @@
     android:background="@color/athens_gray"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/tool_bar"
-        style="@style/Toolbar"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/chelsea_cucumber"
-        div:subtitleTextColor="@color/white"
-        div:title="WorkSpace"
-        div:titleTextColor="@color/athens_gray"/>
+        div:cardBackgroundColor="@color/athens_gray"
+        div:cardCornerRadius="0dp"
+        div:cardElevation="1.5dp"
+        div:cardMaxElevation="2dp"
+        div:cardPreventCornerOverlap="false">
 
-    <!--<Button-->
-    <!--android:id="@+id/btn_test"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="test"/>-->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/tool_bar"
+            style="@style/Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/chelsea_cucumber"
+            div:subtitleTextColor="@color/white"
+            div:title="WorkSpace"
+            div:titleTextColor="@color/athens_gray"/>
+
+    </android.support.v7.widget.CardView>
 
     <ListView
         android:id="@+id/lv_current_files"

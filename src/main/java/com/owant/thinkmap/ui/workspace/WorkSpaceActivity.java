@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +23,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.owant.thinkmap.AppConstants;
 import com.owant.thinkmap.AppPermissions;
@@ -79,32 +81,15 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
         lvCurrentFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (AndroidUtil.isMPermission()) {
-                    if (ContextCompat.checkSelfPermission(WorkSpaceActivity.this,
-                            AppPermissions.permission_storage[0]) != PackageManager.PERMISSION_GRANTED ||
-                            ContextCompat.checkSelfPermission(WorkSpaceActivity.this,
-                                    AppPermissions.permission_storage[1]) != PackageManager.PERMISSION_GRANTED) {
-
-                        requestStoragePermission();
-
-                    } else {
-                        String path = mPresenter.getItemFilePath(position);
-                        //跳转到Edit
-                        intentToEditMap(view, path);
-                    }
-
-                } else {
-                    String path = mPresenter.getItemFilePath(position);
-                    //跳转到Edit
-                    intentToEditMap(view, path);
-                }
+                String path = mPresenter.getItemFilePath(position);
+                //跳转到Edit
+                intentToEditMap(view, path);
             }
         });
 
         lvCurrentFiles.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-
                 return false;
             }
         });
@@ -113,7 +98,22 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
         mPresenter = new WorkSpacePresenter(this);
         mPresenter.start();
         mPresenter.onEmptyView();
-        mPresenter.onLoadOwantData();
+
+        if (AndroidUtil.isMPermission()) {
+            if (ContextCompat.checkSelfPermission(WorkSpaceActivity.this,
+                    AppPermissions.permission_storage[0]) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(WorkSpaceActivity.this,
+                            AppPermissions.permission_storage[1]) != PackageManager.PERMISSION_GRANTED) {
+
+                requestStoragePermission();
+
+            } else {
+                mPresenter.onLoadOwantData();
+            }
+
+        } else {
+            mPresenter.onLoadOwantData();
+        }
     }
 
     private void initListViewAnim() {
@@ -136,12 +136,8 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.menu_work_space_add_a_map:
-
                 intentToEditMap();
                 break;
-//            case R.id.menu_work_space_about:
-//
-//                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -153,6 +149,18 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
         ActivityCompat.requestPermissions(WorkSpaceActivity.this
                 , AppPermissions.permission_storage,
                 AppPermissions.request_permission_storage);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == AppPermissions.request_permission_storage) {
+            if (AndroidUtil.verifyPermissions(grantResults)) {
+                mPresenter.onLoadOwantData();
+            } else {
+                Toast.makeText(this, "You denied the storage permission!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override

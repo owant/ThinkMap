@@ -15,13 +15,18 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".ui.workspace.WorkSpaceActivity"
-            android:theme="@style/AppTheme"
-            android:launchMode="singleTask">
+            android:name=".ui.SplashActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.workspace.WorkSpaceActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme">
         </activity>
 
         <!--编辑-->
