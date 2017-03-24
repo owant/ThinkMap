@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--<item-->
+    <!--android:id="@+id/menu_work_space_search"-->
+    <!--android:icon="@mipmap/search"-->
+    <!--android:title="search"-->
+    <!--app:showAsAction="always"/>-->
+
+    <item
+        android:id="@+id/menu_work_space_add_a_map"
+        android:title="New Map"
+        app:showAsAction="never"/>
+
+    <!--<item-->
+    <!--android:id="@+id/menu_work_space_feedback"-->
+    <!--android:title="Feedback"-->
+    <!--app:showAsAction="never"/>-->
+
+    <!--<item-->
+    <!--android:id="@+id/menu_work_space_support_developers"-->
+    <!--android:title="Support"-->
+    <!--app:showAsAction="never"/>-->
+
+    <!--<item-->
+    <!--android:id="@+id/menu_work_space_settings"-->
+    <!--android:title="Settings"-->
+    <!--app:showAsAction="never"/>-->
+
+    <!--<item-->
+        <!--android:id="@+id/menu_work_space_about"-->
+        <!--android:title="About us"-->
+        <!--app:showAsAction="never"/>-->
+
+</menu>
+
+

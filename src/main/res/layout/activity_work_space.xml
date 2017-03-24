@@ -9,6 +9,7 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tool_bar"
+        style="@style/Toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/chelsea_cucumber"
@@ -16,10 +17,24 @@
         div:title="WorkSpace"
         div:titleTextColor="@color/athens_gray"/>
 
+    <!--<Button-->
+    <!--android:id="@+id/btn_test"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="test"/>-->
+
     <ListView
         android:id="@+id/lv_current_files"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/tv_work_space_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/owant_file_is_empty"
+        android:visibility="gone"/>
 
 </LinearLayout>
 

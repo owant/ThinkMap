@@ -15,10 +15,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.owant.thinkmap.AppConstants;
 import com.owant.thinkmap.R;
 import com.owant.thinkmap.base.BaseAlertDialog;
 import com.owant.thinkmap.model.NodeModel;
 import com.owant.thinkmap.util.AndroidUtil;
+import com.owant.thinkmap.util.LOG;
 
 import java.util.List;
 
@@ -46,11 +48,11 @@ public class EditAlertDialog extends BaseAlertDialog {
 
 
     public EditAlertDialog(@NonNull Context context) {
-        super(context);
+        this(context, 0);
     }
 
     public EditAlertDialog(@NonNull Context context, @StyleRes int themeResId) {
-        super(context, themeResId);
+        super(context, R.style.DivDialog);
     }
 
     @Override
@@ -69,15 +71,30 @@ public class EditAlertDialog extends BaseAlertDialog {
                 public void onClick(View v) {
                     if (enterCallBack != null) {
                         String value = getInput().toString() + "";
-
                         //同名文件提示更改
-                        if (checkLists != null && !TextUtils.isEmpty(value)
-                                && dialog_edit_check_state != null
-                                && dialog_edit_tv_had_same_file != null) {
+                        if (checkLists != null) {
+                            if (AppConstants.CONFIG_DEBUG) {
+                                for (String str : checkLists) {
+                                    LOG.jLogi("list=%s", str);
+                                }
+                            }
 
+                            LOG.jLogi("value=%s", value);
                             if (checkLists.contains(value)) {
-
                                 dialog_edit_tv_had_same_file.setVisibility(View.VISIBLE);
+                                dialog_edit_tv_had_same_file.setText(getContext().
+                                        getResources().getString(R.string.same_name_file));
+                                Animation shake = new TranslateAnimation(0, 10, 0, 0);
+                                shake.setDuration(1000);
+                                //重三次
+                                shake.setInterpolator(new CycleInterpolator(7));
+                                dialog_edit_check_state.startAnimation(shake);
+                                return;
+
+                            } else if (TextUtils.isEmpty(value)) {
+                                dialog_edit_tv_had_same_file.setVisibility(View.VISIBLE);
+                                dialog_edit_tv_had_same_file.setText(getContext().
+                                        getResources().getString(R.string.file_name_empty));
 
                                 Animation shake = new TranslateAnimation(0, 10, 0, 0);
                                 shake.setDuration(1000);
@@ -89,6 +106,7 @@ public class EditAlertDialog extends BaseAlertDialog {
                                 dialog_edit_tv_had_same_file.setVisibility(View.INVISIBLE);
                             }
                         }
+
 
                         enterCallBack.onEdit(value);
                         AndroidUtil.hideKeyboard(getContext(), dialog_edit_et_input);
@@ -169,6 +187,10 @@ public class EditAlertDialog extends BaseAlertDialog {
         if (nodeModel.getParentNode() == null) {
             if (dialog_btn_delete != null) {
                 dialog_btn_delete.setEnabled(false);
+            }
+        } else {
+            if (dialog_btn_delete != null) {
+                dialog_btn_delete.setEnabled(true);
             }
         }
     }

@@ -3,6 +3,7 @@ package com.owant.thinkmap.file;
 import android.os.Environment;
 import android.util.Log;
 
+import com.owant.thinkmap.AppConstants;
 import com.owant.thinkmap.model.TreeModel;
 import com.owant.thinkmap.util.MakeZipClient;
 
@@ -32,15 +33,10 @@ public class OwantFileCreate {
 
     private final static String TAG = "OwantFileCreate";
 
-    private final static String owant_maps = "/OwantMaps/";
-    private final static String temp_create_file = "temp_create_file/";
-    private final static String content = "content";
-    private final static String conf = "conf.txt";
-
 
     public void createOwantMapsDirectory() {
         if (hansSDCard()) {
-            String map_path = Environment.getExternalStorageDirectory().getPath() + owant_maps;
+            String map_path = Environment.getExternalStorageDirectory().getPath() + AppConstants.owant_maps;
             File owantMapDirectory = new File(map_path);
             if (!owantMapDirectory.exists()) {
                 boolean mkdir = owantMapDirectory.mkdirs();
@@ -53,7 +49,7 @@ public class OwantFileCreate {
 
     public void createTempDirectory() {
         if (hansSDCard()) {
-            String path = Environment.getExternalStorageDirectory().getPath() + owant_maps + temp_create_file;
+            String path = Environment.getExternalStorageDirectory().getPath() + AppConstants.owant_maps + AppConstants.temp_create_file;
             File owantMapDirectory = new File(path);
             if (!owantMapDirectory.exists()) {
                 owantMapDirectory.mkdirs();
@@ -70,8 +66,9 @@ public class OwantFileCreate {
     public void writeContent(Object object) {
         try {
 
-            String content_path = Environment.getExternalStorageDirectory().getPath() + owant_maps +
-                    temp_create_file + "content";
+            String content_path = Environment.getExternalStorageDirectory().getPath() +
+                    AppConstants.owant_maps +
+                    AppConstants.temp_create_file + "content";
             writeTreeObject(content_path, object);
 
         } catch (IOException e) {
@@ -81,8 +78,9 @@ public class OwantFileCreate {
 
     public void writeConf(Conf conf) {
         try {
-            String conf_path = Environment.getExternalStorageDirectory().getPath() + owant_maps +
-                    temp_create_file + "conf.txt";
+            String conf_path = Environment.getExternalStorageDirectory().getPath() +
+                    AppConstants.owant_maps +
+                    AppConstants.temp_create_file + "conf.txt";
             writeFile(conf_path, conf.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,32 +89,35 @@ public class OwantFileCreate {
 
     public void makeOwantFile(String saveName) {
         MakeZipClient client = new MakeZipClient();
-        String temp_path = Environment.getExternalStorageDirectory().getPath() + owant_maps + temp_create_file;
-        String savePath = Environment.getExternalStorageDirectory().getPath() + owant_maps + saveName;
+        String temp_path = Environment.getExternalStorageDirectory().getPath() +
+                AppConstants.owant_maps + AppConstants.temp_create_file;
+        String savePath = Environment.getExternalStorageDirectory().getPath() +
+                AppConstants.owant_maps + saveName;
         if (!savePath.endsWith(".owant")) {
             savePath = savePath + ".owant";
         }
         File saveFile = new File(savePath);
         client.create(temp_path, saveFile);
 
-        Log.i(TAG, "创建owant文件成功," + savePath);
+        Log.i(TAG, "创建owant文件成功" + savePath);
     }
 
     public void deleteTemp() {
-        String temp_path = Environment.getExternalStorageDirectory().getPath() + owant_maps +
-                temp_create_file;
+        String temp_path = Environment.getExternalStorageDirectory().getPath()
+                + AppConstants.owant_maps +
+                AppConstants.temp_create_file;
         File file = new File(temp_path);
         delete(file);
     }
 
     public String readConf(String zipFilePath) {
-        String info = readZipFile(zipFilePath, conf);
+        String info = readZipFile(zipFilePath, AppConstants.conf);
         return info;
     }
 
-    public Object readContentObject(String zipFilePath) throws ClassNotFoundException,InvalidClassException {
+    public Object readContentObject(String zipFilePath) throws ClassNotFoundException, InvalidClassException {
         Object o = null;
-        o = readZipFileObject(zipFilePath, content);
+        o = readZipFileObject(zipFilePath, AppConstants.content);
         return o;
     }
 

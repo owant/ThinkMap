@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+
 /**
  * Created by owant on 22/02/2017.
  */
@@ -17,30 +18,35 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         onBasePreLayout();
 
-        setContentView(onBaseLayoutId());
+        setContentView(onBaseLayoutId(savedInstanceState));
 
         onBaseBindView();
+
+        onLoadData();
     }
 
     /**
      * Intent进来的数据处理
      */
-    public void onBaseIntent() {
-    }
+    protected abstract void onBaseIntent();
 
     /**
      * 设置布局之前的处理
      */
-    public void onBasePreLayout() {
-    }
+    protected abstract void onBasePreLayout();
 
     /**
      * 返回布局文件
      *
      * @return id
      */
-    public abstract int onBaseLayoutId();
+    protected abstract int onBaseLayoutId(@Nullable Bundle savedInstanceState);
 
-    public abstract void onBaseBindView();
+    protected abstract void onBaseBindView();
+
+    /**
+     * 加载数据
+     */
+    protected abstract void onLoadData();
 
 }

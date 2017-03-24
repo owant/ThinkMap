@@ -31,7 +31,7 @@
         android:layout_marginLeft="@dimen/margin_bottom_left_min"
         android:layout_marginRight="@dimen/margin_bottom_right_min"
         android:padding="@dimen/padding_super_small"
-        android:text="Have the same name file!"
+        android:text="@string/same_name_file"
         android:textColor="@color/athens_gray"
         android:visibility="invisible"/>
 

@@ -16,6 +16,11 @@
 #   public *;
 #}
 
+#基本模型不能混淆
 -keep class com.owant.thinkmap.model.*{*;}
 -keep public class * extends com.owant.thinkmap.model.NodeModel
 -keep public class * extends com.owant.thinkmap.model.TreeModel
+
+#使用了fastJSON不能混淆泛型，注解
+-keepattributes Signature
+-keepattributes *Annotation*

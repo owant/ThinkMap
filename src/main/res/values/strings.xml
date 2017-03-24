@@ -27,9 +27,13 @@
     <string name="denied_write_storage">You have denied access to WRITE_EXTERNAL_STORAGE!</string>
     <string name="trans_item">trans_item</string>
 
-    <string name="defualt_my_plan">MyPlan</string>
+    <string name="defualt_my_plan">My Plan</string>
     <string name="unkown_error">unknow error!</string>
     <string name="denied_read_storage">you denied read storage permission!</string>
+    <string name="stroage_permission">Sorry, we need the Storage Permission to do that!</string>
+    <string name="same_name_file">Have the same name file!</string>
+    <string name="file_name_empty">The file name is empty!</string>
+    <string name="owant_file_is_empty">OWANT FILE IS EMPTY !</string>
 
 
 </resources>

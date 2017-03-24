@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -259,6 +260,40 @@ public class AndroidUtil {
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         Date date = new Date(millSec);
         return sdf.format(date);
+    }
+
+    /**
+     * 判断是否为android 6.0
+     *
+     * @return true or false
+     */
+    public static boolean isMPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Check that all given permissions have been granted by verifying that each entry in the
+     * given array is of the value {@link PackageManager#PERMISSION_GRANTED}.
+     *
+     * @see Activity#onRequestPermissionsResult(int, String[], int[])
+     */
+    public static boolean verifyPermissions(int[] grantResults) {
+        // At least one result must be checked.
+        if(grantResults.length < 1){
+            return false;
+        }
+
+        // Verify that each required permission has been granted, otherwise return false.
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

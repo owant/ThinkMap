@@ -1,4 +1,4 @@
-package com.owant.thinkmap.test;
+package com.owant.thinkmap.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,11 +6,7 @@ import android.support.annotation.Nullable;
 import com.owant.thinkmap.R;
 import com.owant.thinkmap.base.BaseActivity;
 
-/**
- * Created by owant on 08/03/2017.
- */
-
-public class TestActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onBaseIntent() {
@@ -24,7 +20,7 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected int onBaseLayoutId(@Nullable Bundle savedInstanceState) {
-        return R.layout.test_gv;
+        return R.layout.activity_splash;
     }
 
     @Override

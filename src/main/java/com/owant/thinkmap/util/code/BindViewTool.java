@@ -1,4 +1,4 @@
-package com.owant.thinkmap.util.code;
+package com.owant;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -18,15 +18,9 @@ import java.util.ArrayList;
 
 public class BindViewTool {
 
-//    static String path = "/Users/owant/AndroidStudioProjects/ThinkMap3/app/src/main/res/layout/activity_edit_think_map.xml";
-
-    public static void main(String[] arg) {
-//    	System.out.println("GOGO");
-        if (arg.length > 0) {
-            bindView(arg[0], false);
-            printfResult();
-        }
-    }
+    final static String input_key_i = "-i";
+    final static String input_key_f = "-f";
+    final static String input_key_p = "-p";
 
     /**
      * private TextView info;
@@ -46,7 +40,34 @@ public class BindViewTool {
     private static String ignoreMark = "_";
 
     //找到了需要绑定的View
-    private static ArrayList<Model> bindViews;
+    private static ArrayList<Model> bindViews = new ArrayList<>();
+
+
+    public static void main(String[] arg) {
+
+        if (arg.length >= 2) {
+            boolean inp = false;
+            InputMode mode = new InputMode();
+            for (String str : arg) {
+                if (mode.getState().equals(input_key_f)) {
+                    isFragment = Boolean.valueOf(str);
+                } else if (mode.getState().equals(input_key_p)) {
+                    bindView(str, false);
+                    inp = true;
+                } else if (mode.getState().equals(input_key_i)) {
+                    ignoreMark = str;
+                }
+                if (!inp) {
+                    mode.setState(str);
+                }
+            }
+
+        } else if (arg.length == 1) {
+            bindView(arg[0], false);
+        }
+
+        printfResult();
+    }
 
     public static void bindView(String xmlPath, boolean includeState) {
         try {
@@ -99,7 +120,6 @@ public class BindViewTool {
         System.out.println("\n\n");
 
         System.out.println("public void bindViews(){\n");
-
         for (Model m : bindViews) {
             String find = find_view_format.replace("{0}", m.mName);
             find = find.replace("{1}", m.mType);
@@ -152,9 +172,10 @@ public class BindViewTool {
                 String androidIdTagValue = xmlPullParser.getAttributeValue(i);
                 if (androidIdTagValue.startsWith("@+id/")) {
                     androidIdValue = androidIdTagValue.replace("@+id/", "");
+
                     //ignore
-                    if (androidIdValue.startsWith("_")) {
-                        androidIdValue = "";
+                    if (androidIdValue.startsWith(ignoreMark)) {
+                        continue;
                     }
 
                     if (androidIdValue != null) {
@@ -204,6 +225,29 @@ public class BindViewTool {
         public String mType;
         public String mName;
         public String mId;
+    }
+
+    public static class InputMode {
+
+        public String state = "";
+
+        public void setState(String input) {
+            if (input.equals(input_key_f)) {
+                state = input_key_f;
+            } else if (input.equals(input_key_i)) {
+                state = input_key_i;
+            } else if (input.equals(input_key_p)) {
+                state = input_key_p;
+            } else {
+                state = "";
+            }
+        }
+
+        public String getState() {
+            return state;
+        }
+
+
     }
 }
 

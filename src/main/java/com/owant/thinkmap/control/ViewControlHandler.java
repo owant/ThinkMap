@@ -9,7 +9,7 @@ import com.nineoldandroids.view.ViewHelper;
  * Created by owant on 09/02/2017.
  */
 
-public class MoveHandler {
+public class ViewControlHandler {
     /**
      * 作用于的View
      */
@@ -19,9 +19,10 @@ public class MoveHandler {
     private int lastY = 0;
 
     private int mode = 0;
-    float oldDist;
+    private float oldDist;
+    private int midDx = 30;
 
-    public MoveHandler(View view) {
+    public ViewControlHandler(View view) {
         this.mView = view;
     }
 
@@ -38,29 +39,33 @@ public class MoveHandler {
                 mode = 0;
                 break;
             case MotionEvent.ACTION_POINTER_UP:
-                mode -= 2;
+                //将模式进行为负数这样，多指下，抬起不会触发移动
+                mode = -2;
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
+                //多指按下时记录两者的距离
                 oldDist = spacing(event);
                 mode += 1;
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 if (mode >= 2) {
+                    //移动后的距离
                     float newDist = spacing(event);
                     float scaleX = ViewHelper.getScaleX(mView);
                     ViewHelper.setPivotX(mView, 0);
                     ViewHelper.setPivotY(mView, mView.getHeight() / 2.0f);
 
+                    //新和旧的比为缩放的倍数
                     float v = scaleX * (newDist / oldDist);
-                    if (newDist > oldDist + 1) {//增大
+                    if (newDist > oldDist + midDx) {//增大
                         if (v <= 1.2) {
                             ViewHelper.setScaleX(mView, v);
                             ViewHelper.setScaleY(mView, v);
                             oldDist = newDist;
                         }
                     }
-                    if (newDist < oldDist - 1) {//减小
+                    if (newDist < oldDist - midDx) {//减小
                         if (v > 0.3) {
                             ViewHelper.setScaleX(mView, v);
                             ViewHelper.setScaleY(mView, v);
@@ -86,6 +91,12 @@ public class MoveHandler {
     }
 
 
+    /**
+     * 两点之间的距离
+     *
+     * @param event
+     * @return
+     */
     private float spacing(MotionEvent event) {
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);

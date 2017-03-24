@@ -2,21 +2,28 @@ package com.owant.thinkmap.ui.editmap;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.owant.thinkmap.AppConstants;
 import com.owant.thinkmap.R;
 import com.owant.thinkmap.base.BaseActivity;
 import com.owant.thinkmap.model.NodeModel;
+import com.owant.thinkmap.model.TreeModel;
 import com.owant.thinkmap.ui.EditAlertDialog;
-import com.owant.thinkmap.ui.codemode.CodeModeActivity;
+import com.owant.thinkmap.ui.workspace.WorkSpaceActivity;
+import com.owant.thinkmap.util.AndroidUtil;
 import com.owant.thinkmap.util.DensityUtils;
-import com.owant.thinkmap.view.NodeView;
+import com.owant.thinkmap.util.LOG;
 import com.owant.thinkmap.view.RightTreeLayoutManager;
 import com.owant.thinkmap.view.TreeView;
 import com.owant.thinkmap.view.TreeViewItemClick;
@@ -25,13 +32,15 @@ import com.owant.thinkmap.view.TreeViewItemLongClick;
 import java.io.Serializable;
 
 /**
- * Created by owant on 13/03/2017.
+ * Created by owant on 21/03/2017.
  */
+
 public class EditMapActivity extends BaseActivity implements EditMapContract.View {
+    private final String TAG = "EditMapActivity";
+    private final static String tree_model = "tree_model";
 
-    private static final String TAG = "EditMapActivity";
-
-    private static final String SAVE_TREE_MODEL_DATA = "tree_model";
+    private String saveDefaultFilePath;
+    private EditMapContract.Presenter mEditMapPresenter;
 
     private TreeView editMapTreeView;
     private Button btnAddSub;
@@ -39,101 +48,80 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
     private Button btnFocusMid;
     private Button btnCodeMode;
 
-    private EditMapContract.Presenter mPresenter;
-
-    private EditAlertDialog addSubNodeDialog;
-    private EditAlertDialog addNodeDialog;
-    private EditAlertDialog editNodeDialog;
+    private EditAlertDialog addSubNodeDialog = null;
+    private EditAlertDialog addNodeDialog = null;
+    private EditAlertDialog editNodeDialog = null;
+    private EditAlertDialog saveFileDialog = null;
 
     @Override
-    public int onBaseLayoutId() {
+    protected void onBaseIntent() {
+
+    }
+
+    @Override
+    protected void onBasePreLayout() {
+
+    }
+
+    @Override
+    protected int onBaseLayoutId(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_edit_think_map;
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(SAVE_TREE_MODEL_DATA, mPresenter.getTreeModel());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Serializable serializable = savedInstanceState.getSerializable(SAVE_TREE_MODEL_DATA);
-        mPresenter.reSetTreeData(serializable);
-        editMapTreeView.setTreeModel(mPresenter.getTreeModel());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        clearDialog(addNodeDialog);
-        clearDialog(addSubNodeDialog);
-    }
-
-    @Override
-    public void onBaseBindView() {
-        bindViews();
-    }
-
-    private void intentToCodeMode() {
-        Intent codeModeIntent = new Intent(EditMapActivity.this, CodeModeActivity.class);
-        startActivity(codeModeIntent);
-    }
-
-    private void bindViews() {
-
-        mPresenter = new EditMapPresenter(this);
-        mPresenter.start();
+    public void bindViews() {
 
         editMapTreeView = (TreeView) findViewById(R.id.edit_map_tree_view);
         btnAddSub = (Button) findViewById(R.id.btn_add_sub);
         btnAddNode = (Button) findViewById(R.id.btn_add_node);
         btnFocusMid = (Button) findViewById(R.id.btn_focus_mid);
         btnCodeMode = (Button) findViewById(R.id.btn_code_mode);
+    }
 
-        btnAddSub.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.addSubNote();
-            }
-        });
+    @Override
+    protected void onBaseBindView() {
+        bindViews();
 
         btnAddNode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.addSomeFloorNote();
+                mEditMapPresenter.addNote();
+            }
+        });
+
+        btnAddSub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEditMapPresenter.addSubNote();
             }
         });
 
         btnFocusMid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.focusMidMap();
+                mEditMapPresenter.focusMid();
             }
         });
 
         btnCodeMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intentToCodeMode();
+
             }
         });
+
+
+        int dx = DensityUtils.dp2px(getApplicationContext(), 20);
+        int dy = DensityUtils.dp2px(getApplicationContext(), 20);
+        int screenHeight = DensityUtils.dp2px(getApplicationContext(), 720);
+        editMapTreeView.setTreeLayoutManager(new RightTreeLayoutManager(dx, dy, screenHeight));
 
         editMapTreeView.setTreeViewItemLongClick(new TreeViewItemLongClick() {
             @Override
             public void onLongClick(View view) {
-                mPresenter.editTreeNote();
+                mEditMapPresenter.editNote();
             }
         });
 
-        editMapTreeView.setTreeViewItemLongClick(new TreeViewItemLongClick() {
-            @Override
-            public void onLongClick(View view) {
-                NodeModel<String> treeNode = ((NodeView) view).getTreeNode();
-                mPresenter.changeNode(treeNode);
-            }
-        });
         editMapTreeView.setTreeViewItemClick(new TreeViewItemClick() {
             @Override
             public void onItemClick(View item) {
@@ -141,25 +129,74 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
             }
         });
 
-        int dx = DensityUtils.dp2px(this, 20);
-        int dy = DensityUtils.dp2px(this, 20);
-        int mHeight = DensityUtils.dp2px(this, 720);
-        editMapTreeView.setTreeLayoutManager(new RightTreeLayoutManager(dx, dy, mHeight));
-        editMapTreeView.setTreeModel(mPresenter.getTreeModel());
+        initPresenter();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(tree_model, mEditMapPresenter.getTreeModel());
+        Log.i(TAG, "onSaveInstanceState: 保持数据");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Serializable saveZable = savedInstanceState.getSerializable(tree_model);
+        mEditMapPresenter.setTreeModel((TreeModel<String>) saveZable);
+    }
+
+    private void initPresenter() {
+        //presenter层关联的View
+        mEditMapPresenter = new EditMapPresenter(this);
+        mEditMapPresenter.start();
+
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+        if (data != null) {
+            final String path = data.getPath();
+            //加载owant的文件路径
+            presenterSetLoadMapPath(path);
+            //解析owant文件
+            mEditMapPresenter.readOwantFile();
+        } else {
+            mEditMapPresenter.createDefaultTreeModel();
+        }
+    }
+
+    private void presenterSetLoadMapPath(String path) {
+        mEditMapPresenter.setLoadMapPath(path);
+    }
+
+    @Override
+    protected void onLoadData() {
 
     }
 
     @Override
     public void setPresenter(EditMapContract.Presenter presenter) {
-        if (presenter != null) {
-            mPresenter = presenter;
-        } else {
-            Log.e(TAG, "setPresenter: the presenter is null");
+        if (mEditMapPresenter == null) {
+            mEditMapPresenter = presenter;
         }
     }
 
     @Override
-    public void showAddNode() {
+    public void showLoadingFile() {
+
+    }
+
+    @Override
+    public void setTreeViewData(TreeModel<String> treeModel) {
+        editMapTreeView.setTreeModel(treeModel);
+    }
+
+    @Override
+    public void hideLoadingFile() {
+
+    }
+
+    @Override
+    public void showAddNoteDialog() {
         if (editMapTreeView.getCurrentFocusNode().getParentNode() == null) {
             Toast.makeText(this, getString(R.string.cannot_add_node), Toast.LENGTH_SHORT).show();
         } else if (addNodeDialog == null) {
@@ -185,17 +222,10 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
             addNodeDialog.clearInput();
             addNodeDialog.show();
         }
-
-    }
-
-    private void clearDialog(Dialog dialog) {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-        }
     }
 
     @Override
-    public void showAddSubNode() {
+    public void showAddSubNoteDialog() {
         if (addSubNodeDialog == null) {
             LayoutInflater factory = LayoutInflater.from(this);
             View inflate = factory.inflate(R.layout.dialog_edit_input, null);
@@ -206,7 +236,7 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
                 @Override
                 public void onEdit(String value) {
                     if (TextUtils.isEmpty(value)) {
-                        value = "null_node";
+                        value = getString(R.string.null_node);
                     }
                     editMapTreeView.addSubNode(value);
                     clearDialog(addSubNodeDialog);
@@ -220,31 +250,17 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
     }
 
     @Override
-    public void showFocusMid() {
-        editMapTreeView.focusMidLocation();
-    }
-
-    @Override
-    public void showCodeMode() {
-
-    }
-
-    @Override
-    public void showSaveMap() {
-
-    }
-
-    @Override
-    public void showEditNote(final NodeModel<String> nodeModel) {
+    public void showEditNoteDialog() {
         if (editNodeDialog == null) {
             LayoutInflater factory = LayoutInflater.from(this);
-            View inflate = factory.inflate(R.layout.dialog_edit_input, null);
+            View view = factory.inflate(R.layout.dialog_edit_input, null);
             editNodeDialog = new EditAlertDialog(this);
-            editNodeDialog.setView(inflate);
+            editNodeDialog.setView(view);
             editNodeDialog.setDivTitle(getString(R.string.edit_node));
         }
-        editNodeDialog.setNodeModel(nodeModel);
-        editNodeDialog.setInput(nodeModel.getValue());
+
+        editNodeDialog.setNodeModel(getCurrentFocusNode());
+        editNodeDialog.setInput(getCurrentFocusNode().getValue());
         editNodeDialog.addDeleteCallBack(new EditAlertDialog.DeleteCallBack() {
             @Override
             public void onDeleteModel(NodeModel<String> model) {
@@ -265,7 +281,7 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
                 if (TextUtils.isEmpty(value)) {
                     value = getString(R.string.null_node);
                 }
-                editMapTreeView.changeNodeValue(nodeModel, value);
+                editMapTreeView.changeNodeValue(getCurrentFocusNode(), value);
                 clearDialog(editNodeDialog);
             }
         });
@@ -273,7 +289,92 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
     }
 
     @Override
-    public String getDefualtPlanString() {
+    public void showSaveFileDialog(String fileName) {
+        if (saveFileDialog == null) {
+            LayoutInflater factory = LayoutInflater.from(this);
+            View view = factory.inflate(R.layout.dialog_edit_input, null);
+            saveFileDialog = new EditAlertDialog(this);
+            saveFileDialog.setView(view);
+            saveFileDialog.setDivTitle(getString(R.string.save_file));
+        }
+        //如果是编辑文本时可能已经有文件名了，需要进行读取文件的名字
+        saveFileDialog.setInput(mEditMapPresenter.getSaveInput());
+
+        //获取文件目录下的已经存在的文件集合
+        saveFileDialog.setCheckLists(mEditMapPresenter.getOwantLists());
+
+        saveFileDialog.addEnterCallBack(new EditAlertDialog.EnterCallBack() {
+            @Override
+            public void onEdit(String value) {
+                mEditMapPresenter.doSaveFile();
+
+                //退出文件
+                clearDialog(saveFileDialog);
+
+//                Intent intent=new Intent(EditMapActivity.this,WorkSpaceActivity.class);
+//                startActivityForResult(intent,WorkSpaceActivity.result_msg);
+                EditMapActivity.this.finish();
+            }
+        });
+        saveFileDialog.addDeleteCallBack(new EditAlertDialog.DeleteCallBack() {
+            @Override
+            public void onDeleteModel(NodeModel<String> nodeModel) {
+
+            }
+
+            @Override
+            public void onDelete() {
+                EditMapActivity.this.finish();
+            }
+        });
+        saveFileDialog.show();
+    }
+
+    @Override
+    public void focusingMid() {
+        editMapTreeView.focusMidLocation();
+    }
+
+    @Override
+    public String getDefaultPlanStr() {
         return getString(R.string.defualt_my_plan);
+    }
+
+    @Override
+    public NodeModel<String> getCurrentFocusNode() {
+        return editMapTreeView.getCurrentFocusNode();
+    }
+
+    @Override
+    public String getDefaultSaveFilePath() {
+        saveDefaultFilePath = Environment.getExternalStorageDirectory().getPath() + AppConstants.owant_maps;
+        LOG.jLogi("saveDefaultFilePath=%s", saveDefaultFilePath);
+        return saveDefaultFilePath;
+    }
+
+    @Override
+    public String getAppVersion() {
+        return AndroidUtil.getAppVersion(getApplicationContext());
+    }
+
+    private void clearDialog(Dialog dialog) {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            mEditMapPresenter.saveFile();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mEditMapPresenter.onRecycle();
+        super.onDestroy();
     }
 }

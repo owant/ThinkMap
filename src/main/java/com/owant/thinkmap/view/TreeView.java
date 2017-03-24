@@ -8,15 +8,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 
 import com.nineoldandroids.view.ViewHelper;
 import com.owant.thinkmap.R;
-import com.owant.thinkmap.control.MoveHandler;
+import com.owant.thinkmap.control.ViewControlHandler;
 import com.owant.thinkmap.model.NodeModel;
 import com.owant.thinkmap.model.TreeModel;
 import com.owant.thinkmap.util.DensityUtils;
@@ -42,7 +40,7 @@ public class TreeView extends ViewGroup {
     private TreeLayoutManager mTreeLayoutManager;
 
     //移动控制
-    private MoveHandler mMoveHandler;
+    private ViewControlHandler mViewControlHandler;
 
     //点击事件
     private TreeViewItemClick mTreeViewItemClick;
@@ -67,7 +65,7 @@ public class TreeView extends ViewGroup {
         setClipChildren(false);
         setClipToPadding(false);
 
-        mMoveHandler = new MoveHandler(this);
+        mViewControlHandler = new ViewControlHandler(this);
         mContext = context;
     }
 
@@ -93,7 +91,6 @@ public class TreeView extends ViewGroup {
 
 
             boxCallBackChange(0, 0);
-            Log.i(TAG, "onLayout: >>>");
         }
     }
 
@@ -223,7 +220,7 @@ public class TreeView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return mMoveHandler.move(event);
+        return mViewControlHandler.move(event);
     }
 
     public TreeModel<String> getTreeModel() {
@@ -342,6 +339,7 @@ public class TreeView extends ViewGroup {
 
     private void preformTreeItemLongClick(View v) {
         setCurrentSelectedNode(((NodeView) v).getTreeNode());
+
         if (mTreeViewItemLongClick != null) {
             mTreeViewItemLongClick.onLongClick(v);
         }
