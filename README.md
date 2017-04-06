@@ -5,13 +5,13 @@
 ###how to use this project
 
 this project is a module of AndroidStudio. you can capy the module
- in the Project Space,and add the code 'include "/treeview"/' of the 'settings.gradle', and 'Sync Now' Project.
+ in the Project Space,and add the code 'include "/ThinkMap"/' of the 'settings.gradle', and 'Sync Now' Project.
 
 ###The Simple code
 
 follwing the simple code, you can build a tree.
-```java
 
+```
         final NodeModel<String> nodeA = new NodeModel<>("A");
         final NodeModel<String> nodeB = new NodeModel<>("B");
         final NodeModel<String> nodeC = new NodeModel<>("C");
