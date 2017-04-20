@@ -28,10 +28,10 @@
     <!--android:title="Settings"-->
     <!--app:showAsAction="never"/>-->
 
-    <!--<item-->
-        <!--android:id="@+id/menu_work_space_about"-->
-        <!--android:title="About us"-->
-        <!--app:showAsAction="never"/>-->
+    <item
+        android:id="@+id/menu_work_space_about"
+        android:title="About us"
+        app:showAsAction="never"/>
 
 </menu>
 

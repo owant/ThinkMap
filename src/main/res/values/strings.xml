@@ -34,6 +34,8 @@
     <string name="same_name_file">Have the same name file!</string>
     <string name="file_name_empty">The file name is empty!</string>
     <string name="owant_file_is_empty">OWANT FILE IS EMPTY !</string>
+    <string name="about">About</string>
+    <string name="exit_edit">Quit</string>
 
 
 </resources>

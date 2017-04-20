@@ -3,7 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-
     <!--app-->
     <dimen name="app_launcher_icon">48dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
@@ -60,5 +59,7 @@
     <dimen name="text_size_display_3">56sp</dimen>
     <dimen name="text_size_display_4">112sp</dimen>
 
+    <!--滑动item的高度-->
+    <dimen name="scroll_item_height">75dp</dimen>
 
 </resources>

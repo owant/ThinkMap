@@ -135,7 +135,7 @@ public class BindViewTool {
     }
 
     private static void xmlTagBusiness(String path, XmlPullParser xmlPullParser) {
-        //对于这个情况需要进行com.owant.example.view.DivView
+        //对于这个情况需要进行com.owant.examples.view.DivView
         String type = xmlPullParser.getName();
         int pointExist = type.lastIndexOf(".");
         if (pointExist != -1) {
@@ -246,8 +246,6 @@ public class BindViewTool {
         public String getState() {
             return state;
         }
-
-
     }
 }
 

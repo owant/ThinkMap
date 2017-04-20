@@ -11,6 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
@@ -20,8 +23,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,9 +33,13 @@ import com.owant.thinkmap.adapter.CurrentWorkAdapter;
 import com.owant.thinkmap.base.BaseActivity;
 import com.owant.thinkmap.line.EaseCubicInterpolator;
 import com.owant.thinkmap.model.CurrentFileModel;
+import com.owant.thinkmap.ui.about.AboutUsActivity;
 import com.owant.thinkmap.ui.editmap.EditMapActivity;
 import com.owant.thinkmap.util.AndroidUtil;
+import com.owant.thinkmap.util.SharePreUtil;
+import com.owant.thinkmap.view.RecycleItemClickListener;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -46,7 +51,7 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
     private WorkSpaceContract.Presenter mPresenter;
 
     private Toolbar toolBar;
-    private ListView lvCurrentFiles;
+    private RecyclerView rcvCurrentFiles;
     private TextView tvWorkSpaceEmptyView;
 
     private CurrentWorkAdapter mCurrentWorkAdapter;
@@ -63,12 +68,12 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
 
     @Override
     protected int onBaseLayoutId(@Nullable Bundle savedInstanceState) {
-        return R.layout.activity_work_space;
+        return R.layout.activity_work_space_2;
     }
 
     public void bindViews() {
         toolBar = (Toolbar) findViewById(R.id.tool_bar);
-        lvCurrentFiles = (ListView) findViewById(R.id.lv_current_files);
+        rcvCurrentFiles = (RecyclerView) findViewById(R.id.rcv_current_files);
         tvWorkSpaceEmptyView = (TextView) findViewById(R.id.tv_work_space_empty_view);
     }
 
@@ -78,22 +83,11 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
         setSupportActionBar(toolBar);
         initListViewAnim();
 
-        lvCurrentFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String path = mPresenter.getItemFilePath(position);
-                //跳转到Edit
-                intentToEditMap(view, path);
-            }
-        });
-
-        lvCurrentFiles.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return false;
-            }
-        });
-
+        //RecycleView的样式设置
+        rcvCurrentFiles.setLayoutManager(
+                new GridLayoutManager(this, 1));
+        rcvCurrentFiles.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL));
 
         mPresenter = new WorkSpacePresenter(this);
         mPresenter.start();
@@ -116,13 +110,23 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
         }
     }
 
+    @Override
+    protected void onLoadData() {
+
+        InputStream inputStream = getResources().openRawResource(R.raw.examples);
+        if (inputStream != null) {
+            mPresenter.onLoadExamples(inputStream);
+        }
+        mPresenter.onLoadOwantData();
+    }
+
     private void initListViewAnim() {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.right_in);
         LayoutAnimationController controller = new LayoutAnimationController(animation);
         controller.setDelay(0.3f);
         controller.setOrder(0);
         controller.setInterpolator(new EaseCubicInterpolator(0.47f, 0.01f, 0.44f, 0.99f));
-        lvCurrentFiles.setLayoutAnimation(controller);
+        rcvCurrentFiles.setLayoutAnimation(controller);
     }
 
     @Override
@@ -138,8 +142,16 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
             case R.id.menu_work_space_add_a_map:
                 intentToEditMap();
                 break;
+            case R.id.menu_work_space_about:
+                intentToAboutUs();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void intentToAboutUs() {
+        Intent intent = new Intent(this, AboutUsActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -164,11 +176,6 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
     }
 
     @Override
-    protected void onLoadData() {
-
-    }
-
-    @Override
     public void setPresenter(WorkSpaceContract.Presenter presenter) {
         mPresenter = presenter;
     }
@@ -176,20 +183,46 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
     @Override
     public void showEmptyView() {
         tvWorkSpaceEmptyView.setVisibility(View.VISIBLE);
-        lvCurrentFiles.setEmptyView(tvWorkSpaceEmptyView);
-        lvCurrentFiles.setAdapter(null);
+        rcvCurrentFiles.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean shouldLoadExample() {
+        String exitsExampleVersion = SharePreUtil.getInstance().getString(AppConstants.sp_examples_version);
+        String examplesVersion = getExampleVersion();
+        Log.i(TAG, exitsExampleVersion + "," + examplesVersion);
+        if (!examplesVersion.equals(exitsExampleVersion)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void changeExampleVersion(String version) {
+        SharePreUtil.getInstance().init(getApplicationContext());
+        SharePreUtil.getInstance().putString(AppConstants.sp_examples_version, version);
     }
 
     @Override
     public void setListData(ArrayList<CurrentFileModel> listData) {
         if (mCurrentWorkAdapter == null) {
             mCurrentWorkAdapter = new CurrentWorkAdapter(this, listData);
-            lvCurrentFiles.setAdapter(mCurrentWorkAdapter);
+            mCurrentWorkAdapter.setRecycleItemClickListener(new RecycleItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    String path = mPresenter.getItemFilePath(position);
+                    //跳转到Edit
+                    intentToEditMap(view, path);
+                }
+            });
+            rcvCurrentFiles.setAdapter(mCurrentWorkAdapter);
         }
 
-        mCurrentWorkAdapter.setLists(listData);
-        mCurrentWorkAdapter.notifyDataSetInvalidated();
-
+        if (listData.size() > 0) {
+            rcvCurrentFiles.setVisibility(View.VISIBLE);
+            tvWorkSpaceEmptyView.setVisibility(View.GONE);
+        }
+        mCurrentWorkAdapter.notifyDataSetChanged();
         Log.i(TAG, "setListData: notifyDataSetInvalidation");
 
     }
@@ -203,6 +236,11 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
     public String getOwantDefaultPath() {
         String saveFileParentPath = Environment.getExternalStorageDirectory().getAbsolutePath() + AppConstants.owant_maps;
         return saveFileParentPath;
+    }
+
+    @Override
+    public String getExampleVersion() {
+        return getString(R.string.examplesVersion);
     }
 
     private void intentToEditMap() {
@@ -235,4 +273,6 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
             mPresenter.onLoadOwantData();
         }
     }
+
+
 }

@@ -14,7 +14,7 @@ import android.view.WindowManager;
 
 import com.nineoldandroids.view.ViewHelper;
 import com.owant.thinkmap.R;
-import com.owant.thinkmap.control.ViewControlHandler;
+import com.owant.thinkmap.control.ViewScaleHandler;
 import com.owant.thinkmap.model.NodeModel;
 import com.owant.thinkmap.model.TreeModel;
 import com.owant.thinkmap.util.DensityUtils;
@@ -40,7 +40,7 @@ public class TreeView extends ViewGroup {
     private TreeLayoutManager mTreeLayoutManager;
 
     //移动控制
-    private ViewControlHandler mViewControlHandler;
+    private ViewScaleHandler mViewScaleHandler;
 
     //点击事件
     private TreeViewItemClick mTreeViewItemClick;
@@ -65,7 +65,7 @@ public class TreeView extends ViewGroup {
         setClipChildren(false);
         setClipToPadding(false);
 
-        mViewControlHandler = new ViewControlHandler(this);
+        mViewScaleHandler = new ViewScaleHandler(this);
         mContext = context;
     }
 
@@ -220,7 +220,7 @@ public class TreeView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return mViewControlHandler.move(event);
+        return mViewScaleHandler.move(event);
     }
 
     public TreeModel<String> getTreeModel() {
@@ -463,5 +463,5 @@ public class TreeView extends ViewGroup {
     public TreeLayoutManager getTreeLayoutManager() {
         return mTreeLayoutManager;
     }
-    
+
 }

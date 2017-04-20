@@ -16,7 +16,7 @@ import java.util.LinkedList;
 /**
  * Created by owant on 08/03/2017.
  */
-public class RightTreeLayoutManager implements TreeLayoutManager{
+public class RightTreeLayoutManager implements TreeLayoutManager {
 
     final int msg_standard_layout = 1;
     final int msg_correct_layout = 2;
@@ -43,6 +43,8 @@ public class RightTreeLayoutManager implements TreeLayoutManager{
 
             View rootView = treeView.findNodeViewFromNodeModel(mTreeModel.getRootNode());
             if (rootView != null) {
+
+                //根节点位置
                 rootTreeViewLayout((NodeView) rootView);
             }
 
@@ -77,20 +79,19 @@ public class RightTreeLayoutManager implements TreeLayoutManager{
     private void doNext(int msg, NodeModel<String> next, TreeView treeView) {
         View view = treeView.findNodeViewFromNodeModel(next);
 
-        if (msg == msg_standard_layout) {//标准分布
-
+        if (msg == msg_standard_layout) {
+            //标准分布
             standardLayout(treeView, (NodeView) view);
-        } else if (msg == msg_correct_layout) {//纠正
-
+        } else if (msg == msg_correct_layout) {
+            //纠正
             correctLayout(treeView, (NodeView) view);
         } else if (msg == msg_box_call_back) {
 
-
+            //View的大小变化
             int left = view.getLeft();
             int top = view.getTop();
             int bottom = view.getBottom();
             int right = view.getRight();
-
 
             //     *******
             //     *     *
@@ -119,8 +120,8 @@ public class RightTreeLayoutManager implements TreeLayoutManager{
      * @param next
      */
     public void correctLayout(TreeView treeView, NodeView next) {
-        TreeModel mTree = treeView.getTreeModel();
 
+        TreeModel mTree = treeView.getTreeModel();
         int count = next.getTreeNode().getChildNodes().size();
 
         if (next.getParent() != null && count >= 2) {
@@ -130,6 +131,7 @@ public class RightTreeLayoutManager implements TreeLayoutManager{
 
             int topDr = next.getTop() - treeView.findNodeViewFromNodeModel(tn).getBottom() + mDy;
             int bnDr = treeView.findNodeViewFromNodeModel(bn).getTop() - next.getBottom() + mDy;
+
             //上移动
             ArrayList<NodeModel<String>> allLowNodes = mTree.getAllLowNodes(bn);
             ArrayList<NodeModel<String>> allPreNodes = mTree.getAllPreNodes(tn);

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="@dimen/scroll_item_height">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="right|center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/scroll_menu_delet"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:src="@mipmap/menu_delete"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/athens_gray"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_normal_min"
+        android:transitionName="@string/trans_item">
+
+        <TextView
+            android:id="@+id/owant_file_root_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/padding_normal_big"
+            android:paddingTop="@dimen/padding_normal_small"
+            android:textColor="@color/jaguar"
+            android:textSize="@dimen/text_size_title"
+            tools:text="我的计划"/>
+
+        <TextView
+            android:id="@+id/owant_file_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/padding_normal_big"
+            android:paddingTop="@dimen/padding_super_small"
+            android:textSize="@dimen/text_size_iv_tell"
+            tools:text="/OwantMaps/android.owant"/>
+
+    </LinearLayout>
+
+</FrameLayout>

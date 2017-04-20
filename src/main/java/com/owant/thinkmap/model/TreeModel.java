@@ -19,8 +19,8 @@ public class TreeModel<T> implements Serializable {
     public NodeModel<T> rootNode;
 
     /**
-     * 模型里的接口是不用序列号的
-     */
+     * 模型里的接口是不用序列号的     */
+
     public transient ForTreeItem<NodeModel<T>> mForTreeItem;
 
     public TreeModel(NodeModel<T> rootNode) {

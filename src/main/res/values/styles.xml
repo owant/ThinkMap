@@ -6,9 +6,10 @@
         <item name="colorPrimary">@color/chelsea_cucumber</item>
         <item name="colorPrimaryDark">@color/chelsea_cucumber</item>
         <item name="colorAccent">@color/chelsea_cucumber</item>
-
         <!--对于menu的显示为more的图标下-->
         <item name="overlapAnchor">false</item>
+        <item name="android:windowBackground">@color/fantasy</item>
+
     </style>
 
     <style name="SplashStyle" parent="AppTheme">
@@ -16,6 +17,13 @@
         <item name="colorPrimaryDark">@color/athens_gray</item>
         <item name="android:background">@color/athens_gray</item>
         <item name="android:windowBackground">@null</item>
+    </style>
+
+    <!--显示ActionBar-->
+    <style name="AppWithActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/chelsea_cucumber</item>
+        <item name="colorPrimaryDark">@color/chelsea_cucumber</item>
+        <item name="colorAccent">@color/chelsea_cucumber</item>
     </style>
 
     <style name="TabTheme">
@@ -62,5 +70,6 @@
         <item name="android:clipChildren">false</item>
         <item name="android:clipToPadding">false</item>
     </style>
+
 
 </resources>

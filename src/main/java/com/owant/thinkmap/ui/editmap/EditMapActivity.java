@@ -106,6 +106,10 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
             @Override
             public void onClick(View v) {
 
+                //TODO 添加命令模式指令
+                Toast.makeText(EditMapActivity.this,
+                        "This feature is in development...",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -130,6 +134,7 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
         });
 
         initPresenter();
+        //TODO 需要进入文件时对焦中心
     }
 
     @Override
@@ -170,7 +175,6 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
 
     @Override
     protected void onLoadData() {
-
     }
 
     @Override
@@ -299,6 +303,7 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
         }
         //如果是编辑文本时可能已经有文件名了，需要进行读取文件的名字
         saveFileDialog.setInput(mEditMapPresenter.getSaveInput());
+        saveFileDialog.setConditionDeleteTextValue(getString(R.string.exit_edit));
 
         //获取文件目录下的已经存在的文件集合
         saveFileDialog.setCheckLists(mEditMapPresenter.getOwantLists());
@@ -306,16 +311,18 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
         saveFileDialog.addEnterCallBack(new EditAlertDialog.EnterCallBack() {
             @Override
             public void onEdit(String value) {
+
                 mEditMapPresenter.doSaveFile();
 
                 //退出文件
                 clearDialog(saveFileDialog);
-
 //                Intent intent=new Intent(EditMapActivity.this,WorkSpaceActivity.class);
 //                startActivityForResult(intent,WorkSpaceActivity.result_msg);
+
                 EditMapActivity.this.finish();
             }
         });
+
         saveFileDialog.addDeleteCallBack(new EditAlertDialog.DeleteCallBack() {
             @Override
             public void onDeleteModel(NodeModel<String> nodeModel) {

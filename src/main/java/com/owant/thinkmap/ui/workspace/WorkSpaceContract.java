@@ -4,6 +4,7 @@ import com.owant.thinkmap.base.BasePresenter;
 import com.owant.thinkmap.base.BaseView;
 import com.owant.thinkmap.model.CurrentFileModel;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -12,10 +13,18 @@ import java.util.ArrayList;
 public interface WorkSpaceContract {
 
     interface Presenter extends BasePresenter {
+
         /**
          * 空ListView的提示
          */
         void onEmptyView();
+
+        /**
+         * 加载owant的example示例
+         *
+         * @param inputStream
+         */
+        void onLoadExamples(InputStream inputStream);
 
         /**
          * 加载Owant文件
@@ -40,6 +49,18 @@ public interface WorkSpaceContract {
         void showEmptyView();
 
         /**
+         * 是否需要加载owant示例
+         *
+         * @return
+         */
+        boolean shouldLoadExample();
+
+        /**
+         * 重置owant示例不用加载示例
+         */
+        void changeExampleVersion(String version);
+
+        /**
          * 设置ListView的数据
          *
          * @param listData
@@ -52,6 +73,8 @@ public interface WorkSpaceContract {
         void refreshListData();
 
         String getOwantDefaultPath();
+
+        String getExampleVersion();
 
     }
 

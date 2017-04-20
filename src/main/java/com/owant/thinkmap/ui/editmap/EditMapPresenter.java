@@ -6,6 +6,7 @@ import android.util.Log;
 import com.owant.thinkmap.AppConstants;
 import com.owant.thinkmap.file.Conf;
 import com.owant.thinkmap.file.OwantFileCreate;
+import com.owant.thinkmap.file.ZipTool;
 import com.owant.thinkmap.model.NodeModel;
 import com.owant.thinkmap.model.TreeModel;
 import com.owant.thinkmap.util.AndroidUtil;
@@ -13,6 +14,10 @@ import com.owant.thinkmap.util.LOG;
 import com.owant.thinkmap.util.StringTool;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InvalidClassException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,7 +28,6 @@ import java.util.List;
 /**
  * Created by owant on 21/03/2017.
  */
-
 public class EditMapPresenter implements EditMapContract.Presenter {
 
     private EditMapContract.View mView;
@@ -136,7 +140,7 @@ public class EditMapPresenter implements EditMapContract.Presenter {
 
     @Override
     public void readOwantFile() {
-        //TODO 读取owant文件
+        //读取owant文件
         if (!StringTool.isEmpty(mFilePath)) {
             try {
                 OwantFileCreate owantFileCreate = new OwantFileCreate();
@@ -213,7 +217,6 @@ public class EditMapPresenter implements EditMapContract.Presenter {
         return mTreeModel;
     }
 
-
     @Override
     public List getOwantLists() {
         List list = new ArrayList();
@@ -237,4 +240,5 @@ public class EditMapPresenter implements EditMapContract.Presenter {
             return mFileName;
         }
     }
+
 }

@@ -2,6 +2,7 @@ package com.owant.thinkmap.test;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.owant.thinkmap.R;
 import com.owant.thinkmap.base.BaseActivity;
@@ -24,7 +25,7 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected int onBaseLayoutId(@Nullable Bundle savedInstanceState) {
-        return R.layout.test_gv;
+        return R.layout.activity_test;
     }
 
     @Override
@@ -35,5 +36,10 @@ public class TestActivity extends BaseActivity {
     @Override
     protected void onLoadData() {
 
+    }
+
+    public void makeOwantFile(View view) {
+        ExampleCreator.createExampleMapVersion();
+        ExampleCreator.createExampleHowToUse();
     }
 }

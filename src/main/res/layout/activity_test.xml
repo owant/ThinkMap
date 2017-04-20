@@ -6,11 +6,11 @@
     android:clipChildren="false"
     android:clipToPadding="false">
 
-    <com.owant.thinkmap.view.TreeView
-        android:id="@+id/test_tree_view"
+
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bon_jour">
-    </com.owant.thinkmap.view.TreeView>
+        android:layout_height="wrap_content"
+        android:onClick="makeOwantFile"
+        android:text="create"/>
 
 </FrameLayout>

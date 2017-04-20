@@ -28,7 +28,7 @@ public class SharePreUtil {
 
     public String getString(String key) {
         if (mSharedPrefs == null) return null;
-        return mSharedPrefs.getString(key, null);
+        return mSharedPrefs.getString(key, "");
     }
 
     public void putString(String key, String value) {
