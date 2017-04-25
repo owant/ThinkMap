@@ -20,7 +20,7 @@ public class MakeZipClient {
     private File saveFilePath;
 
     public void create(String sourcePath, File savePath) {
-        arrayFiles = new ArrayList<File>();
+        arrayFiles = new ArrayList<>();
         this.sourcePath = sourcePath;
         this.saveFilePath = savePath;
 

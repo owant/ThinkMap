@@ -64,7 +64,7 @@ def buildTime() {
 }
 
 ext {
-    support_version = "25.2.0"
+    support_version = "25.3.1"
 }
 
 dependencies {

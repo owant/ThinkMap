@@ -36,6 +36,10 @@
     <string name="owant_file_is_empty">OWANT FILE IS EMPTY !</string>
     <string name="about">About</string>
     <string name="exit_edit">Quit</string>
+    <string name="me_information">Do something interesting.   zhongowant@gmail.com</string>
+    <string name="eg_owant_file">/OwantMaps/android.owant</string>
+    <string name="new_map">New Map</string>
+    <string name="about_us">About us</string>
 
 
 </resources>

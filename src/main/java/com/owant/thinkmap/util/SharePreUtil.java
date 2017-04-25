@@ -35,7 +35,7 @@ public class SharePreUtil {
         if (mSharedPrefs == null) return;
         SharedPreferences.Editor editor = mSharedPrefs.edit();
         editor.putString(key, value);
-        if (Build.VERSION.SDK_INT >= 9)
+        if (Build.VERSION.SDK_INT >= 15)
             editor.apply();
         else
             editor.commit();
@@ -45,7 +45,7 @@ public class SharePreUtil {
         SharedPreferences.Editor editor = mSharedPrefs.edit();
         editor.remove(key);
 
-        if (Build.VERSION.SDK_INT >= 9) {
+        if (Build.VERSION.SDK_INT >=15) {
             editor.apply();
         } else {
             editor.commit();

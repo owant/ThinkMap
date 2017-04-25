@@ -9,6 +9,7 @@ import com.owant.thinkmap.util.AndroidUtil;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by owant on 31/03/2017.
@@ -79,7 +80,7 @@ public class ExampleCreator {
 
         Conf conf = new Conf();
         Date time = Calendar.getInstance().getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         conf.date = simpleDateFormat.format(time);
         conf.app_version = "v1.0.3";
         conf.android_version = AndroidUtil.getAndroidSystemVersion();
@@ -119,7 +120,7 @@ public class ExampleCreator {
 
         Conf conf = new Conf();
         Date time = Calendar.getInstance().getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA);
         conf.date = simpleDateFormat.format(time);
         conf.app_version = "v1.0.3";
         conf.android_version = AndroidUtil.getAndroidSystemVersion();

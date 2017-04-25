@@ -17,8 +17,7 @@
         android:paddingTop="@dimen/padding_normal_small"
         android:textColor="@color/jaguar"
         android:textSize="@dimen/text_size_title"
-        android:text="我的计划"
-        tools:text="我的计划"/>
+        tools:text="@string/my_plan"/>
 
     <TextView
         android:id="@+id/owant_file_path"
@@ -27,7 +26,6 @@
         android:paddingLeft="@dimen/padding_normal_big"
         android:paddingTop="@dimen/padding_super_small"
         android:textSize="@dimen/text_size_iv_tell"
-        android:text="/OwantMaps/android.owant"
-        tools:text="/OwantMaps/android.owant"/>
+        tools:text="@string/eg_owant_file"/>
 
 </LinearLayout>

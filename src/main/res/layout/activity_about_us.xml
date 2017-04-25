@@ -19,6 +19,6 @@
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
         android:gravity="center"
-        android:text="Do something interesting.\n\n zhongowant@gmail.com"/>
+        android:text="@string/me_information"/>
 
 </LinearLayout>

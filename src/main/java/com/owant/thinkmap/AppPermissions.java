@@ -1,11 +1,14 @@
 package com.owant.thinkmap;
 
 import android.Manifest;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
 /**
  * Created by owant on 23/03/2017.
  */
 
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 public class AppPermissions {
 
     //权限请求

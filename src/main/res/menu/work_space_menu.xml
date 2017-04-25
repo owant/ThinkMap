@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/menu_work_space_add_a_map"
-        android:title="New Map"
+        android:title="@string/new_map"
         app:showAsAction="never"/>
 
     <!--<item-->
@@ -30,7 +30,7 @@
 
     <item
         android:id="@+id/menu_work_space_about"
-        android:title="About us"
+        android:title="@string/about_us"
         app:showAsAction="never"/>
 
 </menu>

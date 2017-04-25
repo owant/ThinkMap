@@ -25,13 +25,13 @@ public class BindViewTool {
     /**
      * private TextView info;
      */
-    private static String declare_format = "private {0} {1};";
+    private static final String declare_format = "private {0} {1};";
 
     /**
      * info=(TextView)findViewById(R.id.text);
      * info=(TextView)getView().findViewById(R.id.text);
      */
-    private static String find_view_format = "{0} = ({1}){2}findViewById({3});";
+    private static final String find_view_format = "{0} = ({1}){2}findViewById({3});";
 
     private static boolean isFragment = false;
     /**

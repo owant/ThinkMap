@@ -36,7 +36,7 @@ import java.io.Serializable;
  */
 
 public class EditMapActivity extends BaseActivity implements EditMapContract.View {
-    private final String TAG = "EditMapActivity";
+    private final static String TAG = "EditMapActivity";
     private final static String tree_model = "tree_model";
 
     private String saveDefaultFilePath;

@@ -38,7 +38,7 @@ public class NodeModel<T> implements Serializable {
 
     public NodeModel(T value) {
         this.value = value;
-        this.childNodes = new LinkedList<NodeModel<T>>();
+        this.childNodes = new LinkedList<>();
 
         this.focus = false;
         this.parentNode = null;

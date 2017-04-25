@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -24,6 +25,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AndroidUtil {
 
@@ -89,8 +91,8 @@ public class AndroidUtil {
      */
     public static void openSettingsConn(Context mContext, Integer requestCode) {
         Intent settings = null;
-        // SDK>10，就是3.0以上的版本
-        if (android.os.Build.VERSION.SDK_INT > 10) {
+        // SDK>15，就是3.0以上的版本
+        if (android.os.Build.VERSION.SDK_INT >= 15) {
             settings = new Intent(android.provider.Settings.ACTION_SETTINGS);
         } else {
             settings = new Intent();
@@ -111,24 +113,25 @@ public class AndroidUtil {
         openSettingsConn(mContext, null);
     }
 
-    /**
-     * 设置是否启用WIFI网络
-     */
-    public static void toggleWiFi(Context context, boolean status) {
-
-        WifiManager wifiManager = (WifiManager) context
-                .getSystemService(Context.WIFI_SERVICE);
-        if (status == true && !wifiManager.isWifiEnabled()) {
-            wifiManager.setWifiEnabled(true);
-
-        } else if (status == false && wifiManager.isWifiEnabled()) {
-            wifiManager.setWifiEnabled(false);
-        }
-    }
+//    /**
+//     * 设置是否启用WIFI网络
+//     */
+//    public static void toggleWiFi(Context context, boolean status) {
+//
+//        WifiManager wifiManager = (WifiManager) context
+//                .getSystemService(Context.WIFI_SERVICE);
+//        if (status == true && !wifiManager.isWifiEnabled()) {
+//            wifiManager.setWifiEnabled(true);
+//
+//        } else if (status == false && wifiManager.isWifiEnabled()) {
+//            wifiManager.setWifiEnabled(false);
+//        }
+//    }
 
     public static String getCurrentSSID(Context context) {
         String ssid = "";
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext()
+                .getSystemService(Context.WIFI_SERVICE);
         if (wifiManager.isWifiEnabled()) {
             ssid = wifiManager.getConnectionInfo().getSSID();
             ssid = ssid.replaceAll("\"", "");
@@ -144,6 +147,7 @@ public class AndroidUtil {
      *
      * @param context
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Deprecated
     public static void openMobileState(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -154,11 +158,7 @@ public class AndroidUtil {
             method = mClass.getMethod("setMobileDataEnabled", boolean.class);
             method.setAccessible(true);
             method.invoke(manager, state);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
 
@@ -257,7 +257,7 @@ public class AndroidUtil {
     }
 
     public static String transferLongToDate(String dateFormat, Long millSec) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.CHINA);
         Date date = new Date(millSec);
         return sdf.format(date);
     }

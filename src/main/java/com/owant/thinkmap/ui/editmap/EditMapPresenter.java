@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by owant on 21/03/2017.
@@ -192,7 +193,7 @@ public class EditMapPresenter implements EditMapContract.Presenter {
 
         Conf conf = new Conf();
         Date time = Calendar.getInstance().getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         conf.date = simpleDateFormat.format(time);
         conf.app_version = mView.getAppVersion();
         conf.android_version = AndroidUtil.getAndroidSystemVersion();
