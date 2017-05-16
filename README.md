@@ -53,9 +53,8 @@ follwing the simple code, you can build a tree.
         int dy = DensityUtils.dp2px(this, 20);
         int mHeight = DensityUtils.dp2px(this, 720);
       
-
-        binding.testTreeView.setTreeLayoutManager(new RightTreeLayoutManager(dx, dy, mHeight));
-        binding.testTreeView.setTreeModel(tree);
+        testTreeView.setTreeLayoutManager(new RightTreeLayoutManager(dx, dy, mHeight));
+        testTreeView.setTreeModel(tree);
 
 ```
 
