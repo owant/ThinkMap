@@ -113,20 +113,6 @@ public class AndroidUtil {
         openSettingsConn(mContext, null);
     }
 
-//    /**
-//     * 设置是否启用WIFI网络
-//     */
-//    public static void toggleWiFi(Context context, boolean status) {
-//
-//        WifiManager wifiManager = (WifiManager) context
-//                .getSystemService(Context.WIFI_SERVICE);
-//        if (status == true && !wifiManager.isWifiEnabled()) {
-//            wifiManager.setWifiEnabled(true);
-//
-//        } else if (status == false && wifiManager.isWifiEnabled()) {
-//            wifiManager.setWifiEnabled(false);
-//        }
-//    }
 
     public static String getCurrentSSID(Context context) {
         String ssid = "";
@@ -140,56 +126,6 @@ public class AndroidUtil {
             }
         }
         return ssid;
-    }
-
-    /**
-     * 开启手机网络
-     *
-     * @param context
-     */
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Deprecated
-    public static void openMobileState(Context context) {
-        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        Class mClass = manager.getClass();
-        boolean state = true;
-        Method method = null;
-        try {
-            method = mClass.getMethod("setMobileDataEnabled", boolean.class);
-            method.setAccessible(true);
-            method.invoke(manager, state);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    /**
-     * 关闭手机网络
-     *
-     * @param context
-     */
-    @Deprecated
-    public static void closeMobileState(Context context) {
-
-        ConnectivityManager manager = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        Class mClass = manager.getClass();
-        boolean mobileData = false;
-        try {
-            Method method = mClass.getMethod("setMobileDataEnabled", new Class[]{});
-            method.invoke(manager, false);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-
     }
 
     /**
@@ -283,7 +219,7 @@ public class AndroidUtil {
      */
     public static boolean verifyPermissions(int[] grantResults) {
         // At least one result must be checked.
-        if(grantResults.length < 1){
+        if (grantResults.length < 1) {
             return false;
         }
 

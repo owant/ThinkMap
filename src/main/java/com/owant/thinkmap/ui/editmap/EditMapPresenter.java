@@ -80,7 +80,6 @@ public class EditMapPresenter implements EditMapContract.Presenter {
         NodeModel<String> plan = new NodeModel<>(mView.getDefaultPlanStr());
         mTreeModel = new TreeModel<>(plan);
         mView.setTreeViewData(mTreeModel);
-
         refreshOwantFilesLists();
     }
 
