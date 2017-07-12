@@ -1,4 +1,4 @@
-### draw a tree in android,ThinkMap
+### Draw a tree in android,ThinkMap
 
 <image src="./info2.png"/>
 

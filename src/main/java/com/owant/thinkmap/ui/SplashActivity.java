@@ -56,6 +56,7 @@ public class SplashActivity extends BaseActivity {
 
     private void intentToWorkSpace() {
         new Thread(new Runnable() {
+
             @Override
             public void run() {
                 try {

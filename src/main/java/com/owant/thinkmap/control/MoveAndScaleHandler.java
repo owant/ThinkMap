@@ -1,6 +1,8 @@
 package com.owant.thinkmap.control;
 
+import android.content.Context;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import com.nineoldandroids.view.ViewHelper;
@@ -9,7 +11,11 @@ import com.nineoldandroids.view.ViewHelper;
  * Created by owant on 09/02/2017.
  */
 
-public class ViewControlHandler {
+public class MoveAndScaleHandler implements ScaleGestureDetector.OnScaleGestureListener {
+
+    static final float max_scale = 1.2f;
+    static final float min_scale = 0.3f;
+
     /**
      * 作用于的View
      */
@@ -19,14 +25,17 @@ public class ViewControlHandler {
     private int lastY = 0;
 
     private int mode = 0;
-    private float oldDist;
-    private int midDx = 30;
 
-    public ViewControlHandler(View view) {
+    private ScaleGestureDetector mScaleGestureDetector;
+    private Context mContext;
+
+    public MoveAndScaleHandler(Context context, View view) {
         this.mView = view;
+        this.mContext = context;
+        mScaleGestureDetector = new ScaleGestureDetector(mContext, this);
     }
 
-    public boolean move(MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) {
 
         int currentX = (int) event.getRawX();//获得手指当前的坐标,相对于屏幕
         int currentY = (int) event.getRawY();
@@ -43,35 +52,14 @@ public class ViewControlHandler {
                 mode = -2;
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
-                //多指按下时记录两者的距离
-                oldDist = spacing(event);
                 mode += 1;
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 if (mode >= 2) {
-                    //移动后的距离
-                    float newDist = spacing(event);
-                    float scaleX = ViewHelper.getScaleX(mView);
-                    ViewHelper.setPivotX(mView, 0);
-                    ViewHelper.setPivotY(mView, mView.getHeight() / 2.0f);
+                    //缩放
+                    //mScaleGestureDetector.onTouchEvent(event);
 
-                    //新和旧的比为缩放的倍数
-                    float v = scaleX * (newDist / oldDist);
-                    if (newDist > oldDist + midDx) {//增大
-                        if (v <= 1.2) {
-                            ViewHelper.setScaleX(mView, v);
-                            ViewHelper.setScaleY(mView, v);
-                            oldDist = newDist;
-                        }
-                    }
-                    if (newDist < oldDist - midDx) {//减小
-                        if (v > 0.3) {
-                            ViewHelper.setScaleX(mView, v);
-                            ViewHelper.setScaleY(mView, v);
-                            oldDist = newDist;
-                        }
-                    }
                 } else if (mode == 1) {
                     int deltaX = currentX - lastX;
                     int deltaY = currentY - lastY;
@@ -84,12 +72,13 @@ public class ViewControlHandler {
                 }
                 break;
         }
+
         lastX = currentX;
         lastY = currentY;
+
         return true;
 
     }
-
 
     /**
      * 两点之间的距离
@@ -103,4 +92,35 @@ public class ViewControlHandler {
         return (float) Math.sqrt(x * x + y * y);
     }
 
+    @Override
+    public boolean onScale(ScaleGestureDetector detector) {
+
+        float scaleFactor = detector.getScaleFactor();
+
+        if (scaleFactor >= max_scale) {
+            scaleFactor = max_scale;
+        }
+        if (scaleFactor <= min_scale) {
+            scaleFactor = min_scale;
+        }
+
+        float old = mView.getScaleX();
+        if (Math.abs(scaleFactor - old) > 0.6 || Math.abs(scaleFactor - old) < 0.02) {
+            //忽略
+        } else {
+            ViewHelper.setScaleX(mView, scaleFactor);
+            ViewHelper.setScaleY(mView, scaleFactor);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onScaleBegin(ScaleGestureDetector detector) {
+        return true;
+    }
+
+    @Override
+    public void onScaleEnd(ScaleGestureDetector detector) {
+    }
 }

@@ -12,6 +12,7 @@ import com.owant.thinkmap.base.BaseActivity;
  */
 
 public class AboutUsActivity extends BaseActivity {
+
     @Override
     protected void onBaseIntent() {
 

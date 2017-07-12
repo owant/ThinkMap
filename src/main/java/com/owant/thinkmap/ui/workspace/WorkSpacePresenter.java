@@ -127,7 +127,10 @@ public class WorkSpacePresenter implements WorkSpaceContract.Presenter {
                             saveExamplesPath,
                             mView.getOwantDefaultPath());
 
+
+
                     mView.changeExampleVersion(mView.getExampleVersion());
+
                     onLoadOwantData();
 
                 } catch (FileNotFoundException e) {

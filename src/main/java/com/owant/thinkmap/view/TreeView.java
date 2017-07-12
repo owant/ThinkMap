@@ -7,17 +7,22 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.owant.thinkmap.R;
-import com.owant.thinkmap.control.ViewScaleHandler;
+import com.owant.thinkmap.control.MoveAndScaleHandler;
+import com.owant.thinkmap.line.EaseCubicInterpolator;
 import com.owant.thinkmap.model.NodeModel;
 import com.owant.thinkmap.model.TreeModel;
 import com.owant.thinkmap.util.DensityUtils;
+import com.owant.thinkmap.util.LooperFlag;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -30,7 +35,7 @@ import static com.owant.thinkmap.util.DensityUtils.dp2px;
  * Created by owant on 07/03/2017.
  */
 
-public class TreeView extends ViewGroup {
+public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleGestureListener {
 
     private static final String TAG = "TreeView";
 
@@ -40,7 +45,7 @@ public class TreeView extends ViewGroup {
     private TreeLayoutManager mTreeLayoutManager;
 
     //移动控制
-    private ViewScaleHandler mViewScaleHandler;
+    private MoveAndScaleHandler mMoveAndScaleHandler;
 
     //点击事件
     private TreeViewItemClick mTreeViewItemClick;
@@ -50,6 +55,12 @@ public class TreeView extends ViewGroup {
 
     private int mWidth;
     private int mHeight;
+
+    private Integer[] looperBody = new Integer[]{0, 1, 0, -1};
+    private LooperFlag<Integer> mLooperFlag;
+
+
+    private GestureDetector mGestureDetector;
 
     public TreeView(Context context) {
         this(context, null, 0);
@@ -65,8 +76,24 @@ public class TreeView extends ViewGroup {
         setClipChildren(false);
         setClipToPadding(false);
 
-        mViewScaleHandler = new ViewScaleHandler(this);
+        mMoveAndScaleHandler = new MoveAndScaleHandler(context, this);
         mContext = context;
+
+        mLooperFlag = new LooperFlag<>(looperBody, new LooperFlag.LooperListener<Integer>() {
+            @Override
+            public void onLooper(Integer item) {
+
+                looperBusiness(item);
+            }
+        });
+
+        mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                mLooperFlag.next();
+                return true;
+            }
+        });
     }
 
     @Override
@@ -85,11 +112,8 @@ public class TreeView extends ViewGroup {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         if (mTreeLayoutManager != null && mTreeModel != null) {
-
             //树形结构的分布
             mTreeLayoutManager.onTreeLayout(this);
-
-
             boxCallBackChange(0, 0);
         }
     }
@@ -99,6 +123,36 @@ public class TreeView extends ViewGroup {
         super.onSizeChanged(w, h, oldw, oldh);
         mWidth = w;
         mHeight = h;
+    }
+
+    public void looperBusiness(Integer item) {
+        EaseCubicInterpolator easeCubicInterpolator = new EaseCubicInterpolator(0.39f, 0.13f, 0.33f, 1f);
+        ObjectAnimator animator1;
+        ObjectAnimator animator2;
+
+        if (item == -1) {
+
+            animator1 = ObjectAnimator.ofFloat(TreeView.this, "scaleX", getScaleX(), 0.3f)
+                    .setDuration(500);
+            animator2 = ObjectAnimator.ofFloat(TreeView.this, "scaleY", getScaleX(), 0.3f)
+                    .setDuration(500);
+
+        } else if (item == 0) {
+            animator1 = ObjectAnimator.ofFloat(TreeView.this, "scaleX", getScaleX(), 1.0f)
+                    .setDuration(500);
+            animator2 = ObjectAnimator.ofFloat(TreeView.this, "scaleY", getScaleX(), 1.0f)
+                    .setDuration(500);
+        } else {
+            animator1 = ObjectAnimator.ofFloat(TreeView.this, "scaleX", getScaleX(), 1.6f)
+                    .setDuration(500);
+            animator2 = ObjectAnimator.ofFloat(TreeView.this, "scaleY", getScaleX(), 1.6f)
+                    .setDuration(500);
+        }
+
+        animator1.setInterpolator(easeCubicInterpolator);
+        animator2.setInterpolator(easeCubicInterpolator);
+        animator1.start();
+        animator2.start();
     }
 
     private void boxCallBackChange(int dx, int dy) {
@@ -220,7 +274,8 @@ public class TreeView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return mViewScaleHandler.move(event);
+        mGestureDetector.onTouchEvent(event);
+        return mMoveAndScaleHandler.onTouchEvent(event);
     }
 
     public TreeModel<String> getTreeModel() {
@@ -404,7 +459,6 @@ public class TreeView extends ViewGroup {
         treeNodeView.setTreeNode(treeNode);
     }
 
-
     public NodeModel<String> getCurrentFocusNode() {
         return mCurrentFocus;
     }
@@ -463,5 +517,24 @@ public class TreeView extends ViewGroup {
     public TreeLayoutManager getTreeLayoutManager() {
         return mTreeLayoutManager;
     }
+
+    @Override
+    public boolean onScale(ScaleGestureDetector detector) {
+        float scaleFactor = detector.getScaleFactor();
+        setScaleX(scaleFactor);
+        setScaleY(scaleFactor);
+        return false;
+    }
+
+    @Override
+    public boolean onScaleBegin(ScaleGestureDetector detector) {
+        return true;
+    }
+
+    @Override
+    public void onScaleEnd(ScaleGestureDetector detector) {
+
+    }
+
 
 }

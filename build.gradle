@@ -10,13 +10,13 @@ android {
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 10
-        versionName "1.0.3"
+        versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         debug {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
@@ -30,15 +30,18 @@ android {
     productFlavors {
 
         run_debug {
-            applicationId "com.owant.thinkmap_bug"
+            //后缀
+            applicationIdSuffix ".debug"
+            manifestPlaceholders = [app_name: "ThinkMap_Debug"]
             //示例版本，用于判断是否需要更新示例
-            resValue("string", "examplesVersion", "v1.0.3")
+            resValue("string", "examplesVersion", "v1.0.5")
         }
 
         thinkmap_release {
-            applicationId "com.owant.thinkmap"
+
+            manifestPlaceholders = [app_name: "ThinkMap"]
             //示例版本，用于判断是否需要更新示例
-            resValue("string", "examplesVersion", "v1.0.3")
+            resValue("string", "examplesVersion", "v1.0.5")
         }
     }
 
@@ -50,8 +53,12 @@ android {
     applicationVariants.all { main ->
         main.outputs.each { output ->
             def file = output.outputFile
-            output.outputFile = new File(file.parent, "thinkmap_" + main.buildType.name +"_v_"+ main.versionName + "_" + buildTime() + ".apk");
+            output.outputFile = new File(file.parent, "thinkmap_" + main.buildType.name + "_v_" + main.versionName + "_" + buildTime() + ".apk");
         }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
     }
 }
 
@@ -67,9 +74,6 @@ ext {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     testCompile 'junit:junit:4.12'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
@@ -82,4 +86,11 @@ dependencies {
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
 }
