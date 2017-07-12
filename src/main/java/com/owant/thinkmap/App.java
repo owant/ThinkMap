@@ -17,7 +17,7 @@ public class App extends Application {
         //初始化工具
         SharePreUtil.getInstance().init(getApplicationContext());
 
-        LeakCanary.install(this);
+//        LeakCanary.install(this);
 
     }
 }

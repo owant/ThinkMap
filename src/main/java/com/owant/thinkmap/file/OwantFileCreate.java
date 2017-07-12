@@ -28,11 +28,9 @@ import java.util.zip.ZipFile;
  * 4.为file_name_temp和conf.txt进行压缩为owant文件;
  * 5.删除create_file文件夹下的所有文件;
  */
-
 public class OwantFileCreate {
 
     private final static String TAG = "OwantFileCreate";
-
 
     public void createOwantMapsDirectory() {
         if (hansSDCard()) {
@@ -69,6 +67,7 @@ public class OwantFileCreate {
             String content_path = Environment.getExternalStorageDirectory().getPath() +
                     AppConstants.owant_maps +
                     AppConstants.temp_create_file + "content";
+
             writeTreeObject(content_path, object);
 
         } catch (IOException e) {
@@ -81,6 +80,7 @@ public class OwantFileCreate {
             String conf_path = Environment.getExternalStorageDirectory().getPath() +
                     AppConstants.owant_maps +
                     AppConstants.temp_create_file + "conf.txt";
+
             writeFile(conf_path, conf.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -106,6 +106,7 @@ public class OwantFileCreate {
         String temp_path = Environment.getExternalStorageDirectory().getPath()
                 + AppConstants.owant_maps +
                 AppConstants.temp_create_file;
+
         File file = new File(temp_path);
         delete(file);
     }

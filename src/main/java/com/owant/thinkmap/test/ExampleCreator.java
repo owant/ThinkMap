@@ -18,8 +18,11 @@ import java.util.Locale;
 public class ExampleCreator {
 
     public static void main(String[] args) {
-        createTreeNodes();
+//        createTreeNodes();
+
+        createExampleMapVersion();
     }
+
 
     public static String format = "NodeModel<String> node{0} = new NodeModel<>(\"{0}\");";
 
@@ -39,8 +42,9 @@ public class ExampleCreator {
         NodeModel<String> version1 = new NodeModel<>("V1.0.1");
         NodeModel<String> version2 = new NodeModel<>("V1.0.2");
         NodeModel<String> version3 = new NodeModel<>("V1.0.3");
+        NodeModel<String> version4 = new NodeModel<>("V1.0.4");
 
-        treeModel.addNode(root, version1, version2, version3);
+        treeModel.addNode(root, version1, version2, version3, version4);
 
         //版本1的情况
         NodeModel<String> v1_draw_tree = new NodeModel<>("绘制树形结构");
@@ -72,21 +76,35 @@ public class ExampleCreator {
         treeModel.addNode(version3, v3_android4, v3_splash, v3_permission, v3_review);
 
 
+        //版本4情況
+        NodeModel<String> v4_fixed_scale_light = new NodeModel<>("Fixed 缩放出现抖动");
+        NodeModel<String> v4_review = new NodeModel<>("ReView优化，Github上\n建立release分支");
+        treeModel.addNode(version4, v4_fixed_scale_light, v4_review);
+
+
         //穿件owant文件
         OwantFileCreate owantFileCreate = new OwantFileCreate();
+
+        //创建文件夹
         owantFileCreate.createOwantMapsDirectory();
+        //删除临时文件
         owantFileCreate.createTempDirectory();
+        //写入内容
         owantFileCreate.writeContent(treeModel);
 
         Conf conf = new Conf();
         Date time = Calendar.getInstance().getTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         conf.date = simpleDateFormat.format(time);
-        conf.app_version = "v1.0.3";
+        conf.app_version = "v1.0.4";
         conf.android_version = AndroidUtil.getAndroidSystemVersion();
         conf.map_name = treeModel.getRootNode().getValue();
+
+        //写入配置
         owantFileCreate.writeConf(conf);
+        //创建压缩包
         owantFileCreate.makeOwantFile("演示-App版本情况");
+        //删除临时文件
         owantFileCreate.deleteTemp();
     }
 
@@ -120,7 +138,7 @@ public class ExampleCreator {
 
         Conf conf = new Conf();
         Date time = Calendar.getInstance().getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         conf.date = simpleDateFormat.format(time);
         conf.app_version = "v1.0.3";
         conf.android_version = AndroidUtil.getAndroidSystemVersion();

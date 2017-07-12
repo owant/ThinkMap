@@ -1,13 +1,13 @@
-###draw a tree in android,ThinkMap
+### Draw a tree in android,ThinkMap
 
 <image src="./info2.png"/>
 
-###how to use this project
+### How to use this project
 
 this project is a module of AndroidStudio. you can capy the module
  in the Project Space,and add the code 'include "/ThinkMap"/' of the 'settings.gradle', and 'Sync Now' Project.
 
-###The Simple code
+### The Simple code
 
 follwing the simple code, you can build a tree.
 
@@ -58,12 +58,12 @@ follwing the simple code, you can build a tree.
 
 ```
 
-###The Blog
+### The Blog
 
 http://www.jianshu.com/p/5346384d71c4
 
 
-###AppStore
+### AppStore
 
 http://shouji.baidu.com/software/11238419.html
 

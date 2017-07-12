@@ -34,6 +34,9 @@ public class ZipTool {
         for (Enumeration entries = zip.entries(); entries.hasMoreElements(); ) {
             ZipEntry entry = (ZipEntry) entries.nextElement();
             String zipEntryName = entry.getName();
+
+            System.out.println("zipEntryName="+zipEntryName);
+
             InputStream in = zip.getInputStream(entry);
             String outPath = (descDir + zipEntryName).replaceAll("\\*", "/");
 
@@ -47,7 +50,7 @@ public class ZipTool {
                 continue;
             }
             //输出文件路径信息
-            System.out.println(outPath);
+            System.out.println("outPath=" + outPath);
 
             OutputStream out = new FileOutputStream(outPath);
             byte[] buf1 = new byte[1024];
