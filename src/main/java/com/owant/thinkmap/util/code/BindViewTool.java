@@ -1,4 +1,4 @@
-package com.owant;
+package com.owant.thinkmap.util.code;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

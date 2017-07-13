@@ -41,7 +41,7 @@ public interface WorkSpaceContract {
         String getItemFilePath(int position);
     }
 
-    interface View extends BaseView<WorkSpaceContract.Presenter> {
+    interface View extends BaseView<Presenter> {
 
         /**
          * 显示空的View

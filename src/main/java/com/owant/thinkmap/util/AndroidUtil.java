@@ -92,7 +92,7 @@ public class AndroidUtil {
     public static void openSettingsConn(Context mContext, Integer requestCode) {
         Intent settings = null;
         // SDK>15，就是3.0以上的版本
-        if (android.os.Build.VERSION.SDK_INT >= 15) {
+        if (Build.VERSION.SDK_INT >= 15) {
             settings = new Intent(android.provider.Settings.ACTION_SETTINGS);
         } else {
             settings = new Intent();
@@ -189,7 +189,7 @@ public class AndroidUtil {
     }
 
     public static String getAndroidSystemVersion() {
-        return "android " + android.os.Build.VERSION.SDK_INT;
+        return "android " + Build.VERSION.SDK_INT;
     }
 
     public static String transferLongToDate(String dateFormat, Long millSec) {
