@@ -82,7 +82,6 @@ dependencies {
     compile "com.android.support:cardview-v7:${support_version}"
     compile "com.android.support:recyclerview-v7:${support_version}"
 
-
     //leak检测
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
