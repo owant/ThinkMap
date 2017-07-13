@@ -18,9 +18,7 @@ import java.util.Locale;
 public class ExampleCreator {
 
     public static void main(String[] args) {
-//        createTreeNodes();
 
-        createExampleMapVersion();
     }
 
 

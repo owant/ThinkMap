@@ -128,7 +128,6 @@ public class WorkSpacePresenter implements WorkSpaceContract.Presenter {
                             mView.getOwantDefaultPath());
 
 
-
                     mView.changeExampleVersion(mView.getExampleVersion());
 
                     onLoadOwantData();

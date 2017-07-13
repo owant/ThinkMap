@@ -1,5 +1,10 @@
 package com.owant.thinkmap.model;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -10,18 +15,18 @@ import java.util.Stack;
 /**
  * Created by owant on 09/02/2017.
  */
-
 public class TreeModel<T> implements Serializable {
 
     /**
      * the root for the tree
      */
-    public NodeModel<T> rootNode;
+    private NodeModel<T> rootNode;
 
     /**
-     * 模型里的接口是不用序列号的     */
+     * 模型里的接口是不用序列号的
+     */
 
-    public transient ForTreeItem<NodeModel<T>> mForTreeItem;
+    private transient ForTreeItem<NodeModel<T>> mForTreeItem;
 
     public TreeModel(NodeModel<T> rootNode) {
         this.rootNode = rootNode;
@@ -104,7 +109,7 @@ public class TreeModel<T> implements Serializable {
      * @param midPreNode
      * @return
      */
-    public NodeModel<T> getLowNode(NodeModel<T> midPreNode) {
+    private NodeModel<T> getLowNode(NodeModel<T> midPreNode) {
         NodeModel<T> find = null;
         NodeModel<T> parentNode = midPreNode.getParentNode();
 
@@ -136,7 +141,7 @@ public class TreeModel<T> implements Serializable {
         return find;
     }
 
-    public NodeModel<T> getPreNode(NodeModel<T> midPreNode) {
+    private NodeModel<T> getPreNode(NodeModel<T> midPreNode) {
 
         NodeModel<T> parentNode = midPreNode.getParentNode();
         NodeModel<T> find = null;
@@ -240,5 +245,17 @@ public class TreeModel<T> implements Serializable {
     public void addForTreeItem(ForTreeItem<NodeModel<T>> forTreeItem) {
         this.mForTreeItem = forTreeItem;
     }
+
+    public Object deepClone() throws IOException, ClassNotFoundException {
+        ByteArrayOutputStream bo=new ByteArrayOutputStream();
+        ObjectOutputStream oo=new ObjectOutputStream(bo);
+        oo.writeObject(this);
+
+        ByteArrayInputStream bi=new ByteArrayInputStream(bo.toByteArray());
+        ObjectInputStream oi=new ObjectInputStream(bi);
+        return(oi.readObject());
+    }
+
+
 
 }

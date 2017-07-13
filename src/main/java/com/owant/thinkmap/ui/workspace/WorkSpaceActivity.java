@@ -33,7 +33,6 @@ import com.owant.thinkmap.adapter.CurrentWorkAdapter;
 import com.owant.thinkmap.base.BaseActivity;
 import com.owant.thinkmap.line.EaseCubicInterpolator;
 import com.owant.thinkmap.model.CurrentFileModel;
-import com.owant.thinkmap.test.ExampleCreator;
 import com.owant.thinkmap.ui.about.AboutUsActivity;
 import com.owant.thinkmap.ui.editmap.EditMapActivity;
 import com.owant.thinkmap.util.AndroidUtil;
@@ -52,9 +51,9 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
     private WorkSpaceContract.Presenter mPresenter;
 
     private Toolbar toolBar;
+
     private RecyclerView rcvCurrentFiles;
     private TextView tvWorkSpaceEmptyView;
-
     private CurrentWorkAdapter mCurrentWorkAdapter;
 
     @Override

@@ -42,7 +42,6 @@ public class BindViewTool {
     //找到了需要绑定的View
     private static ArrayList<Model> bindViews = new ArrayList<>();
 
-
     public static void main(String[] arg) {
 
         if (arg.length >= 2) {

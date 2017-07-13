@@ -16,6 +16,7 @@ import java.util.ArrayList;
 /**
  * Created by owant on 27/02/2017.
  */
+
 public class CurrentWorkAdapter extends RecyclerView.Adapter<CurrentWorkAdapter.CurrentFileViewHold> {
 
     public Context mContext;
@@ -55,9 +56,9 @@ public class CurrentWorkAdapter extends RecyclerView.Adapter<CurrentWorkAdapter.
     }
 
     static class CurrentFileViewHold extends RecyclerView.ViewHolder {
-        public TextView rootValue;
-        public TextView filePath;
-        public RecycleItemClickListener mListener;
+        private TextView rootValue;
+        private TextView filePath;
+        private RecycleItemClickListener mListener;
 
         public CurrentFileViewHold(final View itemView, RecycleItemClickListener listener) {
             super(itemView);
@@ -75,6 +76,4 @@ public class CurrentWorkAdapter extends RecyclerView.Adapter<CurrentWorkAdapter.
             });
         }
     }
-
-
 }

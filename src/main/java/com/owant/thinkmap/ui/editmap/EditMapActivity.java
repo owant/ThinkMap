@@ -312,7 +312,7 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
             @Override
             public void onEdit(String value) {
 
-                mEditMapPresenter.doSaveFile();
+                mEditMapPresenter.doSaveFile(value);
 
                 //退出文件
                 clearDialog(saveFileDialog);
@@ -364,6 +364,11 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
         return AndroidUtil.getAppVersion(getApplicationContext());
     }
 
+    @Override
+    public void finishActivity() {
+        EditMapActivity.this.finish();
+    }
+
     private void clearDialog(Dialog dialog) {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
@@ -373,6 +378,7 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //TODO 判断一下文本是否改变了
             mEditMapPresenter.saveFile();
             return true;
         }
