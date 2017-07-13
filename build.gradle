@@ -29,6 +29,7 @@ android {
     //打包的类型
     productFlavors {
 
+
         run_debug {
             //后缀
             applicationIdSuffix ".debug"
