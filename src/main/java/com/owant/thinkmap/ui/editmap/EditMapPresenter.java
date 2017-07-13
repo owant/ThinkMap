@@ -1,12 +1,10 @@
 package com.owant.thinkmap.ui.editmap;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.owant.thinkmap.AppConstants;
 import com.owant.thinkmap.file.Conf;
 import com.owant.thinkmap.file.OwantFileCreate;
-import com.owant.thinkmap.file.ZipTool;
 import com.owant.thinkmap.model.NodeModel;
 import com.owant.thinkmap.model.TreeModel;
 import com.owant.thinkmap.util.AndroidUtil;
@@ -14,17 +12,16 @@ import com.owant.thinkmap.util.LOG;
 import com.owant.thinkmap.util.StringTool;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InvalidClassException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 /**
  * Created by owant on 21/03/2017.
@@ -38,6 +35,8 @@ public class EditMapPresenter implements EditMapContract.Presenter {
     private String mDefaultFilePath;
     private String mFileName;
     private TreeModel<String> mTreeModel;
+
+    private TreeModel<String> mOldTreeModel;
 
     private String[] mOwantFilesArray;
 
@@ -63,7 +62,6 @@ public class EditMapPresenter implements EditMapContract.Presenter {
         // 获取到是否是编辑文件
         // 文件的名字
         // 文件路径下的owant file lists
-
         mIsCreate = false;
 
         LOG.jLogi("owant file path=%s", path);
@@ -150,9 +148,15 @@ public class EditMapPresenter implements EditMapContract.Presenter {
                 mTreeModel = tree;
                 mView.setTreeViewData(mTreeModel);
 
+                mIsCreate = false;
+                //拷贝一份
+                mOldTreeModel = (TreeModel<String>) mTreeModel.deepClone();
+
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (InvalidClassException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -180,15 +184,65 @@ public class EditMapPresenter implements EditMapContract.Presenter {
 
     @Override
     public void saveFile() {
-        mView.showSaveFileDialog(mFilePath);
+        //TODO 进行判断是否改变了文本
+        //只有在编剧模式下才进行判断其他的跳过
+        boolean equals = false;
+        if (!mIsCreate) {
+            //进行判断
+            equals = isEqualsOldTreeModel();
+        }
+
+        if (equals) {
+            LOG.jLogi("no change =%s", "true");
+            mView.finishActivity();
+        } else {
+            LOG.jLogi("change =%s", "false");
+            mView.showSaveFileDialog(mFilePath);
+        }
+    }
+
+    private boolean isEqualsOldTreeModel() {
+        boolean equals = false;
+        TreeModel<String> temp = mTreeModel;
+        TreeModel<String> compareTemp = mOldTreeModel;
+
+        StringBuffer tempBuffer = new StringBuffer();
+        Stack<NodeModel<String>> stack = new Stack<>();
+        NodeModel<String> rootNode = temp.getRootNode();
+        stack.add(rootNode);
+        while (!stack.isEmpty()) {
+            NodeModel<String> pop = stack.pop();
+            tempBuffer.append(pop.value);
+            LinkedList<NodeModel<String>> childNodes = pop.getChildNodes();
+            for (NodeModel<String> item : childNodes) {
+                stack.add(item);
+            }
+        }
+
+        StringBuffer compareTempBuffer = new StringBuffer();
+        Stack<NodeModel<String>> stackThis = new Stack<>();
+        NodeModel<String> rootNodeThis = compareTemp.getRootNode();
+        stackThis.add(rootNodeThis);
+        while (!stackThis.isEmpty()) {
+            NodeModel<String> pop = stackThis.pop();
+            compareTempBuffer.append(pop.value);
+            LinkedList<NodeModel<String>> childNodes = pop.getChildNodes();
+            for (NodeModel<String> item : childNodes) {
+                stackThis.add(item);
+            }
+        }
+
+        if (compareTempBuffer.toString().equals(tempBuffer.toString())) {
+            equals = true;
+        }
+        return equals;
     }
 
     @Override
-    public void doSaveFile() {
+    public void doSaveFile(String fileName) {
         OwantFileCreate owantFileCreate = new OwantFileCreate();
         owantFileCreate.createOwantMapsDirectory();
         owantFileCreate.createTempDirectory();
-        owantFileCreate.writeContent(mTreeModel);
 
         Conf conf = new Conf();
         Date time = Calendar.getInstance().getTime();
@@ -198,11 +252,16 @@ public class EditMapPresenter implements EditMapContract.Presenter {
         conf.android_version = AndroidUtil.getAndroidSystemVersion();
         conf.map_name = mTreeModel.getRootNode().getValue();
         owantFileCreate.writeConf(conf);
-        if (mIsCreate) {
-            owantFileCreate.makeOwantFile(mTreeModel.getRootNode().getValue());
-        } else {
-            owantFileCreate.makeOwantFile(mFileName);
-        }
+
+        owantFileCreate.writeContent(mTreeModel);
+
+//        //如果是创建模式
+//        if (mIsCreate) {
+//            owantFileCreate.makeOwantFile(mTreeModel.getRootNode().getValue());
+//        } else {
+//            owantFileCreate.makeOwantFile(mFileName);
+//        }
+        owantFileCreate.makeOwantFile(fileName);
         owantFileCreate.deleteTemp();
     }
 

@@ -61,5 +61,6 @@
 
     <!--滑动item的高度-->
     <dimen name="scroll_item_height">75dp</dimen>
+    <dimen name="item_height">60dp</dimen>
 
 </resources>

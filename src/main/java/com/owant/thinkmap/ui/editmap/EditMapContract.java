@@ -63,7 +63,7 @@ public interface EditMapContract {
         /**
          * 进行保存
          */
-        void doSaveFile();
+        void doSaveFile(String fileName);
 
         /**
          * 设置树形模型
@@ -162,5 +162,7 @@ public interface EditMapContract {
          * @return 版本号
          */
         String getAppVersion();
+
+        void finishActivity();
     }
 }
