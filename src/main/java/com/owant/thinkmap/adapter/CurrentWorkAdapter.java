@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.owant.thinkmap.R;
 import com.owant.thinkmap.model.CurrentFileModel;
 import com.owant.thinkmap.view.RecycleItemClickListener;
+import com.owant.thinkmap.view.RecycleItemLongClickListener;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ public class CurrentWorkAdapter extends RecyclerView.Adapter<CurrentWorkAdapter.
     public ArrayList<CurrentFileModel> mLists;
 
     public RecycleItemClickListener mRecycleItemClickListener;
+    public RecycleItemLongClickListener mRecycleItemLongClickListener;
 
     public CurrentWorkAdapter(Context mContext, ArrayList<CurrentFileModel> mLists) {
         this.mContext = mContext;
@@ -34,7 +36,8 @@ public class CurrentWorkAdapter extends RecyclerView.Adapter<CurrentWorkAdapter.
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_current_file, parent, false);
         CurrentFileViewHold currentFileViewHold = new CurrentFileViewHold(
                 view,
-                mRecycleItemClickListener);
+                mRecycleItemClickListener,
+                mRecycleItemLongClickListener);
 
         return currentFileViewHold;
     }
@@ -55,16 +58,24 @@ public class CurrentWorkAdapter extends RecyclerView.Adapter<CurrentWorkAdapter.
         mRecycleItemClickListener = recycleItemClickListener;
     }
 
+    public void setRecycleItemLongClickListener(RecycleItemLongClickListener recycleItemLongClickListener) {
+        mRecycleItemLongClickListener = recycleItemLongClickListener;
+    }
+
     static class CurrentFileViewHold extends RecyclerView.ViewHolder {
         private TextView rootValue;
         private TextView filePath;
         private RecycleItemClickListener mListener;
+        private RecycleItemLongClickListener mLongClickListener;
 
-        public CurrentFileViewHold(final View itemView, RecycleItemClickListener listener) {
+        public CurrentFileViewHold(final View itemView,
+                                   RecycleItemClickListener listener,
+                                   RecycleItemLongClickListener longListener) {
             super(itemView);
             rootValue = (TextView) itemView.findViewById(R.id.owant_file_root_value);
             filePath = (TextView) itemView.findViewById(R.id.owant_file_path);
             mListener = listener;
+            mLongClickListener = longListener;
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -72,6 +83,16 @@ public class CurrentWorkAdapter extends RecyclerView.Adapter<CurrentWorkAdapter.
                     if (mListener != null) {
                         mListener.onItemClick(itemView, getAdapterPosition());
                     }
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (mLongClickListener != null) {
+                        mLongClickListener.onItemLongClick(itemView, getAdapterPosition());
+                    }
+                    return false;
                 }
             });
         }

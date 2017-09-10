@@ -41,5 +41,9 @@
     <string name="new_map">New Map</string>
     <string name="about_us">About us</string>
 
+    <string name="cancel">Cancel</string>
+    <string name="enter_sure">Yes</string>
+    <string name="delete_title">Note:\tRemove the file ？</string>
+
 
 </resources>

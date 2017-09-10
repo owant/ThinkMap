@@ -1,6 +1,7 @@
 package com.owant.thinkmap.ui.workspace;
 
 import android.app.ActivityOptions;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,12 +35,12 @@ import com.owant.thinkmap.adapter.CurrentWorkAdapter;
 import com.owant.thinkmap.base.BaseActivity;
 import com.owant.thinkmap.line.EaseCubicInterpolator;
 import com.owant.thinkmap.model.CurrentFileModel;
-import com.owant.thinkmap.test.ExampleCreator;
 import com.owant.thinkmap.ui.about.AboutUsActivity;
 import com.owant.thinkmap.ui.editmap.EditMapActivity;
 import com.owant.thinkmap.util.AndroidUtil;
 import com.owant.thinkmap.util.SharePreUtil;
 import com.owant.thinkmap.view.RecycleItemClickListener;
+import com.owant.thinkmap.view.RecycleItemLongClickListener;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -216,12 +218,36 @@ public class WorkSpaceActivity extends BaseActivity implements WorkSpaceContract
     public void setListData(ArrayList<CurrentFileModel> listData) {
         if (mCurrentWorkAdapter == null) {
             mCurrentWorkAdapter = new CurrentWorkAdapter(this, listData);
+
+
             mCurrentWorkAdapter.setRecycleItemClickListener(new RecycleItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     String path = mPresenter.getItemFilePath(position);
                     //跳转到Edit
                     intentToEditMap(view, path);
+                }
+            });
+            mCurrentWorkAdapter.setRecycleItemLongClickListener(new RecycleItemLongClickListener() {
+                @Override
+                public void onItemLongClick(View view, final int position) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(WorkSpaceActivity.this);
+                    builder.setTitle(R.string.delete_title);
+                    builder.setPositiveButton(R.string.enter_sure, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mPresenter.removeItemFile(position);
+                            mCurrentWorkAdapter.notifyDataSetChanged();
+                        }
+                    });
+                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    builder.setCancelable(true);
+                    builder.create().show();
                 }
             });
             rcvCurrentFiles.setAdapter(mCurrentWorkAdapter);

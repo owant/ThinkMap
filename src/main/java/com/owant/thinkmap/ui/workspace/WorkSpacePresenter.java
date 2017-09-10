@@ -80,7 +80,12 @@ public class WorkSpacePresenter implements WorkSpaceContract.Presenter {
 
     @Override
     public void removeItemFile(int position) {
-
+        CurrentFileModel currentFileModel = mLists.get(position);
+        File file = new File(currentFileModel.filePath);
+        if (file.exists()) {
+            file.delete();
+            mLists.remove(currentFileModel);
+        }
     }
 
     @Override

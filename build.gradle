@@ -65,7 +65,6 @@ android {
 
 def buildTime() {
     def df = new SimpleDateFormat("yyyyMMdd")
-    df.setTimeZone(TimeZone.getDefault())
     return df.format(new Date())
 }
 

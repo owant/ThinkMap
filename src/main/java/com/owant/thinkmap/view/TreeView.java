@@ -62,6 +62,9 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
 
     private GestureDetector mGestureDetector;
 
+    private Paint mPaint;
+    private Path mPath;
+
     public TreeView(Context context) {
         this(context, null, 0);
     }
@@ -76,13 +79,19 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
         setClipChildren(false);
         setClipToPadding(false);
 
+
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+
+        mPath = new Path();
+        mPath.reset();
+
         mMoveAndScaleHandler = new MoveAndScaleHandler(context, this);
         mContext = context;
 
         mLooperFlag = new LooperFlag<>(looperBody, new LooperFlag.LooperListener<Integer>() {
             @Override
             public void onLooper(Integer item) {
-
                 looperBusiness(item);
             }
         });
@@ -248,14 +257,16 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
             return;
         }
 
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.STROKE);
+//        Paint paint = new Paint();
+//        paint.setAntiAlias(true);
+//        paint.setStyle(Paint.Style.STROKE);
+
+        mPaint.setStyle(Paint.Style.STROKE);
 
         float width = 2f;
 
-        paint.setStrokeWidth(dp2px(mContext, width));
-        paint.setColor(mContext.getResources().getColor(R.color.chelsea_cucumber));
+        mPaint.setStrokeWidth(dp2px(mContext, width));
+        mPaint.setColor(mContext.getResources().getColor(R.color.chelsea_cucumber));
 
         int top = from.getTop();
         int formY = top + from.getMeasuredHeight() / 2;
@@ -265,11 +276,14 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
         int toY = top1 + to.getMeasuredHeight() / 2;
         int toX = to.getLeft();
 
-        Path path = new Path();
-        path.moveTo(formX, formY);
-        path.quadTo(toX - dp2px(mContext, 15), toY, toX, toY);
+//        Path path = new Path();
+//        path.moveTo(formX, formY);
+//        path.quadTo(toX - dp2px(mContext, 15), toY, toX, toY);
 
-        canvas.drawPath(path, paint);
+        mPath.reset();
+        mPath.moveTo(formX, formY);
+        mPath.quadTo(toX - dp2px(mContext, 15), toY, toX, toY);
+        canvas.drawPath(mPath, mPaint);
     }
 
     @Override
