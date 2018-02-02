@@ -1,97 +1,27 @@
-import java.text.SimpleDateFormat
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-apply plugin: 'com.android.application'
-
-android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
-    defaultConfig {
-        applicationId "com.owant.thinkmap"
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 10
-        versionName "1.0.4"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+buildscript {
+    
+    repositories {
+        google()
+        jcenter()
     }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.1'
+        
 
-    buildTypes {
-        debug {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    //打包的类型
-    productFlavors {
-
-
-        run_debug {
-            //后缀
-            applicationIdSuffix ".debug"
-            manifestPlaceholders = [app_name: "ThinkMap_Debug"]
-            //示例版本，用于判断是否需要更新示例
-            resValue("string", "examplesVersion", "v1.0.5")
-        }
-
-        thinkmap_release {
-
-            manifestPlaceholders = [app_name: "ThinkMap"]
-            //示例版本，用于判断是否需要更新示例
-            resValue("string", "examplesVersion", "v1.0.5")
-        }
-    }
-
-    lintOptions {
-        abortOnError false
-    }
-
-    //输出文件
-    applicationVariants.all { main ->
-        main.outputs.each { output ->
-            def file = output.outputFile
-            output.outputFile = new File(file.parent, "thinkmap_" + main.buildType.name + "_v_" + main.versionName + "_" + buildTime() + ".apk");
-        }
-    }
-
-    tasks.withType(JavaCompile) {
-        options.encoding = "UTF-8"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
 }
 
-def buildTime() {
-    def df = new SimpleDateFormat("yyyyMMdd")
-    return df.format(new Date())
-}
-
-ext {
-    support_version = "25.3.1"
-}
-
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
-
-    compile "com.android.support:appcompat-v7:${support_version}"
-    compile "com.android.support:cardview-v7:${support_version}"
-    compile "com.android.support:recyclerview-v7:${support_version}"
-
-
-    //leak检测
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-
-    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.android.support', module: 'support-v4'
-        exclude group: 'com.android.support', module: 'design'
-        exclude group: 'com.android.support', module: 'recyclerview-v7'
+allprojects {
+    repositories {
+        google()
+        jcenter()
     }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
