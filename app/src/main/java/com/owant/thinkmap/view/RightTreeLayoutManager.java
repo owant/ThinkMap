@@ -129,8 +129,11 @@ public class RightTreeLayoutManager implements TreeLayoutManager {
             NodeModel<String> bn = next.getTreeNode().getChildNodes().get(count - 1);
             Log.i("see fc", next.getTreeNode().getValue() + ":" + tn.getValue() + "," + bn.getValue());
 
-            int topDr = next.getTop() - treeView.findNodeViewFromNodeModel(tn).getBottom() + mDy;
-            int bnDr = treeView.findNodeViewFromNodeModel(bn).getTop() - next.getBottom() + mDy;
+//            int topDr = next.getTop() - treeView.findNodeViewFromNodeModel(tn).getBottom() + mDy;
+//            int bnDr = treeView.findNodeViewFromNodeModel(bn).getTop() - next.getBottom() + mDy;
+
+            int topDr = next.getTop() - treeView.findNodeViewFromNodeModel(tn).getTop();
+            int bnDr = treeView.findNodeViewFromNodeModel(bn).getBottom() - next.getBottom();
 
             //上移动
             ArrayList<NodeModel<String>> allLowNodes = mTree.getAllLowNodes(bn);
