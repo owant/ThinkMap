@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
@@ -41,6 +43,7 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
 
     private Context mContext;
 
+    //树形结构
     public TreeModel<String> mTreeModel;
     private TreeLayoutManager mTreeLayoutManager;
 
@@ -49,13 +52,16 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
 
     //点击事件
     private TreeViewItemClick mTreeViewItemClick;
+    //长按
     private TreeViewItemLongClick mTreeViewItemLongClick;
+
     //最近点击的item
     private NodeModel<String> mCurrentFocus;
 
     private int mWidth;
     private int mHeight;
 
+    //触摸循环事件，放大，等同，缩小
     private Integer[] looperBody = new Integer[]{0, 1, 0, -1};
     private LooperFlag<Integer> mLooperFlag;
 
@@ -111,19 +117,26 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
         for (int i = 0; i < size; i++) {
             measureChild(getChildAt(i), widthMeasureSpec, heightMeasureSpec);
         }
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         mWidth = getMeasuredWidth();
         mHeight = getMeasuredHeight();
 
+        if (mTreeLayoutManager != null && mTreeModel != null) {
+            //树形结构的分布
+            mTreeLayoutManager.onTreeLayout(this);
+            ViewBox viewBox = mTreeLayoutManager.onTreeLayoutCallBack();
+            setMeasuredDimension(viewBox.right+Math.abs(viewBox.left),viewBox.bottom+Math.abs(viewBox.top));
+
+            boxCallBackChange();
+        }
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if (mTreeLayoutManager != null && mTreeModel != null) {
-            //树形结构的分布
-            mTreeLayoutManager.onTreeLayout(this);
-            boxCallBackChange(0, 0);
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View childAt = getChildAt(i);
+            childAt.layout(childAt.getLeft(), childAt.getTop(), childAt.getRight(), childAt.getBottom());
         }
     }
 
@@ -164,25 +177,29 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
         animator2.start();
     }
 
-    private void boxCallBackChange(int dx, int dy) {
+    private void boxCallBackChange() {
+        int dy = DensityUtils.dp2px(getContext().getApplicationContext(), 20);
+        int moreWidth = DensityUtils.dp2px(getContext().getApplicationContext(), 200);
 
-        ViewBox box = mTreeLayoutManager.onTreeLayoutCallBack();
-        Log.i("box", box.toString());
+        ViewBox viewBox = mTreeLayoutManager.onTreeLayoutCallBack();
+        ViewBox box = viewBox;
+        Log.i(TAG,"box="+ box.toString());
 
         int w = box.right + dy;
-        int h = box.bottom - box.top;
+        int h = box.bottom +Math.abs(box.top);
         Log.i(TAG, "beLayout: " + getMeasuredWidth() + "," + getMeasuredHeight());
+
         //重置View的大小
         LayoutParams layoutParams = this.getLayoutParams();
-        layoutParams.height = h > getMeasuredHeight() ? h : getMeasuredHeight();
-        layoutParams.width = w > getMeasuredWidth() ? w : getMeasuredWidth();
+        layoutParams.height = h > getMeasuredHeight() ? h + moreWidth : getMeasuredHeight();
+        layoutParams.width = w > getMeasuredWidth() ? w + moreWidth : getMeasuredWidth();
         this.setLayoutParams(layoutParams);
         Log.i(TAG, "onLayout: " + w + "," + h);
 
         //移动节点
         NodeModel<String> rootNode = getTreeModel().getRootNode();
         if (rootNode != null) {
-            moveNodeLayout(this, (NodeView) findNodeViewFromNodeModel(rootNode), -box.top);
+            moveNodeLayout(this, (NodeView) findNodeViewFromNodeModel(rootNode), Math.abs(box.top));
         }
     }
 
@@ -217,10 +234,12 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+
         if (mTreeModel != null) {
             drawTreeLine(canvas, mTreeModel.getRootNode());
         }
-        super.dispatchDraw(canvas);
+
     }
 
     /**
@@ -252,14 +271,9 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
      * @param to
      */
     private void drawLineToView(Canvas canvas, View from, View to) {
-
         if (to.getVisibility() == GONE) {
             return;
         }
-
-//        Paint paint = new Paint();
-//        paint.setAntiAlias(true);
-//        paint.setStyle(Paint.Style.STROKE);
 
         mPaint.setStyle(Paint.Style.STROKE);
 
@@ -275,10 +289,6 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
         int top1 = to.getTop();
         int toY = top1 + to.getMeasuredHeight() / 2;
         int toX = to.getLeft();
-
-//        Path path = new Path();
-//        path.moveTo(formX, formY);
-//        path.quadTo(toX - dp2px(mContext, 15), toY, toX, toY);
 
         mPath.reset();
         mPath.moveTo(formX, formY);
@@ -376,6 +386,7 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
         nodeView.setFocusable(true);
         nodeView.setClickable(true);
         nodeView.setSelected(false);
+
         nodeView.setTreeNode(poll);
 
         LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -394,6 +405,7 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
                 return true;
             }
         });
+
         this.addView(nodeView);
         return nodeView;
     }
@@ -489,6 +501,8 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
             mTreeModel.addNode(parentNode, addNode);
             Log.i(TAG, "addNode: true");
             addNodeViewToGroup(addNode);
+
+
         }
     }
 

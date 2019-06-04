@@ -80,6 +80,7 @@
 
         </activity>
 
+
         <!--百度app市场配置-->
         <meta-data
             android:name="BDAPPID"

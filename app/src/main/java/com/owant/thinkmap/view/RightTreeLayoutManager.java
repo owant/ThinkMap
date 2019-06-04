@@ -63,9 +63,9 @@ public class RightTreeLayoutManager implements TreeLayoutManager {
 
             mViewBox.clear();
             mTreeModel.ergodicTreeInDeep(msg_box_call_back);
-
         }
     }
+
 
     @Override
     public ViewBox onTreeLayoutCallBack() {
@@ -129,11 +129,8 @@ public class RightTreeLayoutManager implements TreeLayoutManager {
             NodeModel<String> bn = next.getTreeNode().getChildNodes().get(count - 1);
             Log.i("see fc", next.getTreeNode().getValue() + ":" + tn.getValue() + "," + bn.getValue());
 
-//            int topDr = next.getTop() - treeView.findNodeViewFromNodeModel(tn).getBottom() + mDy;
-//            int bnDr = treeView.findNodeViewFromNodeModel(bn).getTop() - next.getBottom() + mDy;
-
-            int topDr = next.getTop() - treeView.findNodeViewFromNodeModel(tn).getTop();
-            int bnDr = treeView.findNodeViewFromNodeModel(bn).getBottom() - next.getBottom();
+            int topDr = next.getTop() - treeView.findNodeViewFromNodeModel(tn).getBottom() + mDy;
+            int bnDr = treeView.findNodeViewFromNodeModel(bn).getTop() - next.getBottom() + mDy;
 
             //上移动
             ArrayList<NodeModel<String>> allLowNodes = mTree.getAllLowNodes(bn);
@@ -290,7 +287,7 @@ public class RightTreeLayoutManager implements TreeLayoutManager {
      */
     private void rootTreeViewLayout(NodeView rootView) {
         int lr = mDy;
-        int tr = mHeight / 2 - rootView.getMeasuredHeight() / 2;
+        int tr = mDx;
         int rr = lr + rootView.getMeasuredWidth();
         int br = tr + rootView.getMeasuredHeight();
         rootView.layout(lr, tr, rr, br);

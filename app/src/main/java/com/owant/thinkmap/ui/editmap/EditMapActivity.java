@@ -20,7 +20,6 @@ import com.owant.thinkmap.base.BaseActivity;
 import com.owant.thinkmap.model.NodeModel;
 import com.owant.thinkmap.model.TreeModel;
 import com.owant.thinkmap.ui.EditAlertDialog;
-import com.owant.thinkmap.ui.workspace.WorkSpaceActivity;
 import com.owant.thinkmap.util.AndroidUtil;
 import com.owant.thinkmap.util.DensityUtils;
 import com.owant.thinkmap.util.LOG;
@@ -316,9 +315,6 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
 
                 //退出文件
                 clearDialog(saveFileDialog);
-//                Intent intent=new Intent(EditMapActivity.this,WorkSpaceActivity.class);
-//                startActivityForResult(intent,WorkSpaceActivity.result_msg);
-
                 EditMapActivity.this.finish();
             }
         });

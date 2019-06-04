@@ -29,5 +29,6 @@
 
     <color name="purple_normal">#9932CC</color>
     <color name="purple_pressed">#9F79EE</color>
+    <color name="transparent">#00000000</color>
 
 </resources>
