@@ -9,12 +9,12 @@ android {
             storePassword 'owant123456'
         }
     }
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "com.owant.thinkmap"
-        minSdkVersion 15
-        targetSdkVersion 26
+        minSdkVersion 16
+        targetSdkVersion 28
         versionCode 10
         versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -26,7 +26,7 @@ android {
             applicationIdSuffix ".debug"
             manifestPlaceholders = [app_name: "ThinkMap_Debug"]
             //示例版本，用于判断是否需要更新示例
-            resValue("string", "examplesVersion", "v1.0.5")
+            resValue("string", "examplesVersion", "v1.0.6")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
@@ -37,7 +37,7 @@ android {
             applicationIdSuffix ".debug"
             manifestPlaceholders = [app_name: "ThinkMap_Debug"]
             //示例版本，用于判断是否需要更新示例
-            resValue("string", "examplesVersion", "v1.0.5")
+            resValue("string", "examplesVersion", "v1.0.6")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -46,22 +46,22 @@ android {
 
 
 ext {
-    support_version = "25.3.1"
+    support_version = "28.0.0"
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
-    compile "com.android.support:appcompat-v7:${support_version}"
-    compile "com.android.support:cardview-v7:${support_version}"
-    compile "com.android.support:recyclerview-v7:${support_version}"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
+    implementation "com.android.support:appcompat-v7:${support_version}"
+    implementation "com.android.support:cardview-v7:${support_version}"
+    implementation "com.android.support:recyclerview-v7:${support_version}"
     //leak检测
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'com.android.support', module: 'design'
