@@ -18,11 +18,13 @@ import com.owant.thinkmap.AppConstants;
 import com.owant.thinkmap.R;
 import com.owant.thinkmap.base.BaseActivity;
 import com.owant.thinkmap.model.NodeModel;
+import com.owant.thinkmap.model.OrntModel;
 import com.owant.thinkmap.model.TreeModel;
 import com.owant.thinkmap.ui.EditAlertDialog;
 import com.owant.thinkmap.util.AndroidUtil;
 import com.owant.thinkmap.util.DensityUtils;
 import com.owant.thinkmap.util.LOG;
+import com.owant.thinkmap.view.BottomTreeLayoutManager;
 import com.owant.thinkmap.view.RightTreeLayoutManager;
 import com.owant.thinkmap.view.TreeView;
 import com.owant.thinkmap.view.TreeViewItemClick;
@@ -116,7 +118,14 @@ public class EditMapActivity extends BaseActivity implements EditMapContract.Vie
         int dx = DensityUtils.dp2px(getApplicationContext(), 20);
         int dy = DensityUtils.dp2px(getApplicationContext(), 20);
         int screenHeight = DensityUtils.dp2px(getApplicationContext(), 720);
-        editMapTreeView.setTreeLayoutManager(new RightTreeLayoutManager(dx, dy, screenHeight));
+
+        //TODO 设置横向排列(从左到右)
+//        editMapTreeView.setMode(OrntModel.RIGHT);
+//        editMapTreeView.setTreeLayoutManager(new RightTreeLayoutManager(dx, dy, screenHeight));
+        //TODO 设置纵向排列(从上到下)
+        editMapTreeView.setMode(OrntModel.BOTTOM);
+        editMapTreeView.setTreeLayoutManager(new BottomTreeLayoutManager(dx, dy, screenHeight));
+
 
         editMapTreeView.setTreeViewItemLongClick(new TreeViewItemLongClick() {
             @Override

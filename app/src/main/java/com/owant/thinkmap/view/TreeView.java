@@ -4,12 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -22,6 +21,7 @@ import com.owant.thinkmap.R;
 import com.owant.thinkmap.control.MoveAndScaleHandler;
 import com.owant.thinkmap.line.EaseCubicInterpolator;
 import com.owant.thinkmap.model.NodeModel;
+import com.owant.thinkmap.model.OrntModel;
 import com.owant.thinkmap.model.TreeModel;
 import com.owant.thinkmap.util.DensityUtils;
 import com.owant.thinkmap.util.LooperFlag;
@@ -57,6 +57,9 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
 
     //最近点击的item
     private NodeModel<String> mCurrentFocus;
+
+    //排列模型 默认横向排列
+    private OrntModel mode = OrntModel.RIGHT;
 
     private int mWidth;
     private int mHeight;
@@ -178,15 +181,22 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
     }
 
     private void boxCallBackChange() {
-        int dy = DensityUtils.dp2px(getContext().getApplicationContext(), 20);
+        int dm = DensityUtils.dp2px(getContext().getApplicationContext(), 20);
         int moreWidth = DensityUtils.dp2px(getContext().getApplicationContext(), 200);
 
         ViewBox viewBox = mTreeLayoutManager.onTreeLayoutCallBack();
         ViewBox box = viewBox;
         Log.i(TAG,"box="+ box.toString());
 
-        int w = box.right + dy;
-        int h = box.bottom +Math.abs(box.top);
+        int w;
+        int h;
+        if (mode == OrntModel.BOTTOM){
+            w = box.right + Math.abs(box.left);
+            h = box.bottom + dm;
+        }else {
+            w = box.right + dm;
+            h = box.bottom +Math.abs(box.top);
+        }
         Log.i(TAG, "beLayout: " + getMeasuredWidth() + "," + getMeasuredHeight());
 
         //重置View的大小
@@ -199,7 +209,11 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
         //移动节点
         NodeModel<String> rootNode = getTreeModel().getRootNode();
         if (rootNode != null) {
-            moveNodeLayout(this, (NodeView) findNodeViewFromNodeModel(rootNode), Math.abs(box.top));
+            if (mode == OrntModel.BOTTOM) {
+                moveNodeLayout(this, (NodeView) findNodeViewFromNodeModel(rootNode), Math.abs(box.left), 0);
+            }else {
+                moveNodeLayout(this, (NodeView) findNodeViewFromNodeModel(rootNode), 0, Math.abs(box.top));
+            }
         }
     }
 
@@ -207,11 +221,11 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
      * 移动
      *
      * @param rootView
+     * @param dx
      * @param dy
      */
-    private void moveNodeLayout(TreeView superTreeView, NodeView rootView, int dy) {
-
-        if (dy == 0) {
+    private void moveNodeLayout(TreeView superTreeView, NodeView rootView, int dx, int dy) {
+        if (dx == 0 && dy==0) {
             return;
         }
 
@@ -221,7 +235,7 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
         while (!queue.isEmpty()) {
             rootNode = queue.poll();
             rootView = (NodeView) superTreeView.findNodeViewFromNodeModel(rootNode);
-            int l = rootView.getLeft();
+            int l = rootView.getLeft() + dx;
             int t = rootView.getTop() + dy;
             rootView.layout(l, t, l + rootView.getMeasuredWidth(), t + rootView.getMeasuredHeight());
 
@@ -255,7 +269,11 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
             for (NodeModel<String> node : childNodes) {
 
                 //连线
-                drawLineToView(canvas, fatherView, findNodeViewFromNodeModel(node));
+                if (mode == OrntModel.BOTTOM) {
+                    drawBottomLineToView(canvas, fatherView, findNodeViewFromNodeModel(node));
+                } else {
+                    drawRightLineToView(canvas, fatherView, findNodeViewFromNodeModel(node));
+                }
 
                 //递归
                 drawTreeLine(canvas, node);
@@ -270,7 +288,7 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
      * @param from
      * @param to
      */
-    private void drawLineToView(Canvas canvas, View from, View to) {
+    private void drawRightLineToView(Canvas canvas, View from, View to) {
         if (to.getVisibility() == GONE) {
             return;
         }
@@ -296,6 +314,39 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
         canvas.drawPath(mPath, mPaint);
     }
 
+    /**
+     * 绘制两个View直接的连线
+     *
+     * @param canvas
+     * @param from
+     * @param to
+     */
+    private void drawBottomLineToView(Canvas canvas, View from, View to) {
+        if (to.getVisibility() == GONE) {
+            return;
+        }
+
+        mPaint.setStyle(Paint.Style.STROKE);
+
+        float width = 2f;
+
+        mPaint.setStrokeWidth(dp2px(mContext, width));
+        mPaint.setColor(mContext.getResources().getColor(R.color.chelsea_cucumber));
+
+        int left = from.getLeft();
+        int formY = from.getBottom();
+        int formX = left + from.getMeasuredWidth() / 2;
+
+        int left1 = to.getLeft();
+        int toY = to.getTop();
+        int toX = left1 + to.getMeasuredWidth() / 2;
+
+        mPath.reset();
+        mPath.moveTo(formX, formY);
+        mPath.quadTo(toX ,toY -dp2px(mContext, 15), toX, toY);
+        canvas.drawPath(mPath, mPaint);
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         mGestureDetector.onTouchEvent(event);
@@ -317,6 +368,14 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
     }
 
     /**
+     * 排列模型
+     * @param mode
+     */
+    public void setMode(OrntModel mode) {
+        this.mode = mode;
+    }
+
+    /**
      * 中点对焦
      */
     public void focusMidLocation() {
@@ -326,7 +385,8 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
             WindowManager systemService = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             Display defaultDisplay = systemService.getDefaultDisplay();
             int displayH = defaultDisplay.getHeight();
-            int focusX = DensityUtils.dp2px(mContext, 20);
+            int displayW = defaultDisplay.getWidth();
+            int focusX = displayW/2;
             int focusY = displayH / 2;
 
             //回到原点(0,0)
@@ -334,14 +394,26 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
             ViewHelper.setTranslationY(this, 0);
 
             View view = findNodeViewFromNodeModel(mTreeModel.getRootNode());
-            //回到原点后的中点
-            int pointY = (int) view.getY() + view.getMeasuredHeight() / 2;
-            if (pointY >= focusY) {
-                pointY = -(pointY - focusY);
-            } else {
-                pointY = focusY - pointY;
+            if (mode == OrntModel.BOTTOM) {
+                //回到原点后的中点
+                int pointX = (int) view.getX() + view.getMeasuredWidth() / 2;
+                if (pointX >= focusX) {
+                    pointX = -(pointX - focusX);
+                } else {
+                    pointX = focusX - pointX;
+                }
+                ViewHelper.setTranslationX(this, pointX);
+            }else {
+                //回到原点后的中点
+                int pointY = (int) view.getY() + view.getMeasuredHeight() / 2;
+                if (pointY >= focusY) {
+                    pointY = -(pointY - focusY);
+                } else {
+                    pointY = focusY - pointY;
+                }
+                ViewHelper.setTranslationY(this, pointY);
             }
-            ViewHelper.setTranslationY(this, pointY);
+
         }
     }
 
@@ -388,6 +460,13 @@ public class TreeView extends ViewGroup implements ScaleGestureDetector.OnScaleG
         nodeView.setSelected(false);
 
         nodeView.setTreeNode(poll);
+
+        //TODO 由于我们项目无此需求 所以宽度未做适配 如有需要自行适配
+        if (mode == OrntModel.BOTTOM) {
+            nodeView.setGravity(Gravity.CENTER);
+            nodeView.setEms(1);
+            nodeView.setMaxEms(1);
+        }
 
         LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         nodeView.setLayoutParams(lp);

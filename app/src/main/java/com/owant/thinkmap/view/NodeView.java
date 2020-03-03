@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.owant.thinkmap.R;
 import com.owant.thinkmap.model.NodeModel;
+import com.owant.thinkmap.util.DensityUtils;
 
 
 /**
@@ -31,7 +32,7 @@ public class NodeView extends TextView{
         super(context, attrs, defStyleAttr);
 
         setTextColor(Color.WHITE);
-        setPadding(12, 10, 12, 10);
+        setPadding(0, 10, 0, 10);
 
         Drawable drawable = context.getResources().getDrawable(R.drawable.node_view_bg);
         setBackgroundDrawable(drawable);
