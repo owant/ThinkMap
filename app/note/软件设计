@@ -7,7 +7,7 @@
    流程:
        (要进行清理)
        1.在owantmaps里创建一个create_file文件夹;
-       2.content文件进行写序列画的tree对象;
+       2.content文件进行写序列化的tree对象;
        3.创建一个conf.txt文件进行保存文件基本信息,修改日期,文件名,系统的版本;
        4.为file_name_temp和conf.txt进行压缩为owant文件;
        5.删除create_file文件夹下的所有文件;
