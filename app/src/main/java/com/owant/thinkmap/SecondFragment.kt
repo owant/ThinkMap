@@ -13,6 +13,8 @@ import androidx.navigation.fragment.findNavController
  */
 class SecondFragment : Fragment() {
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,8 +31,14 @@ class SecondFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<Button>(R.id.button_second)
-                .setOnClickListener {
-                    findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-                }
+            .setOnClickListener {
+                findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+                showDialog()
+            }
+    }
+
+    private fun showDialog() {
+        var dialog = DialogFragment()
+        fragmentManager?.let { dialog.show(it, "Dialog") }
     }
 }

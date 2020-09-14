@@ -21,12 +21,12 @@ open class NodeModel<T> {
     /**
      * 子节点集合
      */
-    var childNodes: LinkedList<NodeModel<T>>? = LinkedList<NodeModel<T>>()
+    private var childNodes: LinkedList<NodeModel<T>> = LinkedList<NodeModel<T>>()
 
     /**
      * 当前的层级
      */
-    var float: Int? = 0
+    var floor: Int = 0
 
     /**
      * 是否关闭
@@ -39,7 +39,23 @@ open class NodeModel<T> {
     var focusing: Boolean? = false
 
 
+    fun addNode(child: NodeModel<T>) {
+        child.parentNode = this
+        child.floor = floor + 1
+        getNodes().add(child)
+    }
+
+    fun getNodes(): LinkedList<NodeModel<T>> {
+        return childNodes
+    }
+
     constructor(nodeValue: T) {
         this.nodeValue = nodeValue
     }
+
+    override fun toString(): String {
+        return "NodeModel(parentNode not empty=${parentNode != null}, nodeValue=${nodeValue.toString()}, childSize=${childNodes.size}, floor=$floor, close=$close, focusing=$focusing)"
+    }
+
+
 }
