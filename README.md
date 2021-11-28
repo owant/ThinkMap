@@ -1,7 +1,8 @@
 ### Draw a tree in android,ThinkMap
 
 <image src="./info2.png"/>
-
+<image src="./info3.png"/>
+<image src="./info4.png"/>
 ### The Simple code
 
 following the simple code, you can build a tree.
@@ -47,10 +48,16 @@ following the simple code, you can build a tree.
         int dx = DensityUtils.dp2px(this, 20);
         int dy = DensityUtils.dp2px(this, 20);
         int mHeight = DensityUtils.dp2px(this, 720);
-      
+        
+        //横向排列（从左到右）
+        testTreeView.setMode(OrntModel.RIGHT)
         testTreeView.setTreeLayoutManager(new RightTreeLayoutManager(dx, dy, mHeight));
-        testTreeView.setTreeModel(tree);
 
+        //纵向排列（从上到下）
+        testTreeView.setMode(OrntModel.BOTTOM);
+        testTreeView.setTreeLayoutManager(new BottomTreeLayoutManager(dx, dy, screenHeight));
+        
+        testTreeView.setTreeModel(tree);
 ```
 
 
